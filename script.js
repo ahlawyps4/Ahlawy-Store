@@ -2,11 +2,15 @@
 
 let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 
-// 1. دالة تحميل الألعاب (لحل مشكلة الاختفاء)
+// 1. دالة تحميل الألعاب (معدلة لضمان العرض)
 async function loadGames() {
+    console.log("جاري تحميل البيانات من games.json..."); 
     try {
+        // الخروج من مجلد PS4 للوصول للمجلد الرئيسي
         const response = await fetch('../games.json'); 
-        if (!response.ok) throw new Error("فشل الوصول لملف JSON");
+        
+        if (!response.ok) throw new Error("لم يتم العثور على ملف games.json - تأكد من مكانه في المجلد الرئيسي");
+        
         const games = await response.json();
         const container = document.getElementById('games-container');
         const currentPlatform = document.body.getAttribute('data-platform');
@@ -15,6 +19,7 @@ async function loadGames() {
         container.innerHTML = '';
         
         const filteredGames = games.filter(game => game.platform === currentPlatform);
+        console.log("تم العثور على ألعاب لمنصة:", currentPlatform, filteredGames.length);
 
         if (filteredGames.length === 0) {
             container.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>لا توجد ألعاب حالياً لهذه المنصة.</p>";
@@ -35,12 +40,14 @@ async function loadGames() {
             container.innerHTML += card;
         });
 
-        // تحديث العداد والقائمة فور التحميل
         updateCartCount();
         updateCartList();
 
     } catch (error) {
-        console.error("خطأ فني:", error);
+        console.error("خطأ فني في التحميل:", error);
+        if (document.getElementById('games-container')) {
+            document.getElementById('games-container').innerHTML = `<p style='grid-column: 1/-1; text-align:center; color:red;'>فشل تحميل الألعاب: ${error.message}</p>`;
+        }
     }
 }
 
@@ -81,8 +88,8 @@ function updateCartList() {
         } else {
             listElement.innerHTML = cart.map((item, index) => `
                 <li style="display:flex; justify-content:space-between; align-items:center; background:#222; padding:8px; margin-bottom:8px; border-radius:5px; border:1px solid #333;">
-                    <span style="font-size:12px; color:#fff;">${item}</span>
-                    <button onclick="removeFromCart(${index})" style="background:#ff4444; border:none; color:white; padding:2px 6px; border-radius:3px; cursor:pointer;">×</button>
+                    <span style="font-size:12px; color:#fff; text-align:right; flex:1; padding-right:5px;">${item}</span>
+                    <button onclick="removeFromCart(${index})" style="background:#ff4444; border:none; color:white; padding:2px 6px; border-radius:3px; cursor:pointer; margin-right:10px;">×</button>
                 </li>
             `).join('');
             
@@ -92,18 +99,17 @@ function updateCartList() {
     }
 }
 
-// 3. دالة توليد الـ QR Code (يستخدم المكتبة المضافة في الـ HTML)
+// 3. دالة توليد الـ QR Code
 function generateQR() {
     const qrDiv = document.getElementById('qrcode');
     const qrContainer = document.getElementById('qr-container');
     
     if (cart.length > 0 && qrDiv) {
-        qrDiv.innerHTML = ""; // مسح القديم
+        qrDiv.innerHTML = ""; 
         qrContainer.style.display = 'block';
         
         const orderText = "طلب جديد من أهلاوي ستور 🦅:\n" + cart.map((t, i) => `${i+1}- ${t}`).join("\n");
         
-        // استدعاء مكتبة QRCode
         new QRCode(qrDiv, {
             text: orderText,
             width: 150,
@@ -137,5 +143,4 @@ function sendWhatsApp() {
     window.open(`https://wa.me/201021424781?text=${encodeURIComponent(message)}`);
 }
 
-// تشغيل جلب الألعاب فور تحميل الصفحة
 document.addEventListener('DOMContentLoaded', loadGames);

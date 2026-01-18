@@ -21,24 +21,23 @@ body {
   overflow-x: hidden;
 }
 
-/* 2. الهيدر والبحث */
+/* 2. الهيدر */
 .store-header {
   padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0,0,0,0.85);
+  background: rgba(0,0,0,0.9);
   backdrop-filter: blur(15px);
   position: sticky;
   top: 0;
-  z-index: 5000; /* رفع قيمة z-index للهيدر */
+  z-index: 5000;
   border-bottom: 1px solid var(--glass);
 }
 
 .brand { display: flex; align-items: center; text-decoration: none; color: white; }
 .brand img { width: 40px; margin-left: 10px; border-radius: 8px; }
 
-/* زر السلة في الهيدر */
 .cart-trigger {
   background: var(--main-red);
   padding: 8px 15px;
@@ -47,37 +46,8 @@ body {
   font-weight: bold;
   transition: 0.3s;
 }
-.cart-trigger:hover { background: var(--dark-red); }
 
-/* 3. تنسيق الصفحة الرئيسية */
-.platforms {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
-  padding: 40px 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.platform-card {
-  background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(204,0,0,0.1));
-  border: 1px solid var(--glass);
-  border-radius: 25px;
-  padding: 30px;
-  text-align: center;
-  text-decoration: none;
-  color: white;
-  transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.platform-media img {
-  width: 180px !important;
-  height: auto !important;
-  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
-  margin-bottom: 20px;
-}
-
-/* 4. تنسيق شبكة الألعاب */
+/* 3. شبكة الألعاب */
 .games {
   display: grid !important;
   grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)) !important;
@@ -113,52 +83,54 @@ body {
   font-weight: bold;
 }
 
-/* 5. تنسيق السلة الجانبية (الحل النهائي للظهور الجانبي) */
+/* 4. السلة الجانبية (تم حل مشكلة الخط الأحمر) */
 .cart-section {
   position: fixed !important;
   top: 0 !important;
-  left: -330px !important; /* تبدأ خارج الشاشة */
-  width: 310px !important;
+  left: -350px !important; /* مخفية تماماً */
+  width: 320px !important; /* عرض اللوحة بالكامل */
   height: 100vh !important;
   background: #0d0d0d !important;
-  z-index: 99999 !important; /* أعلى من أي عنصر آخر */
+  z-index: 99999 !important;
   transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  padding: 20px !important;
-  border-right: 3px solid var(--main-red) !important;
-  box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+  padding: 25px !important;
+  border-right: 4px solid var(--main-red) !important;
+  box-shadow: 15px 0 40px rgba(0,0,0,0.9);
   overflow-y: auto;
+  box-sizing: border-box; /* لضمان عدم خروج المحتوى */
 }
 
 .cart-section.open {
-  left: 0 !important; /* تظهر عند إضافة class "open" */
+  left: 0 !important; /* تظهر بالكامل */
 }
 
-/* تنسيق منطقة الـ QR Code داخل السلة */
+/* 5. الـ QR Code داخل السلة */
 #qr-container {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  margin-top: 20px;
-  text-align: center;
+  background: white !important;
+  padding: 15px !important;
+  border-radius: 12px !important;
+  margin: 20px 0 !important;
+  text-align: center !important;
+  display: none; /* يتم فتحه عبر الجافاسكربت */
 }
 
-#qrcode img, #qrcode canvas {
-  margin: 0 auto;
-  max-width: 100%;
+#qrcode img {
+  margin: 0 auto !important;
 }
 
 .close-cart {
   background: none;
   border: none;
   color: white;
-  font-size: 30px;
+  font-size: 32px;
   cursor: pointer;
   float: left;
+  margin-bottom: 20px;
 }
 
-/* 6. الموبايل */
+/* 6. استجابة الموبايل */
 @media (max-width: 480px) {
   .games { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-  .platform-media img { width: 140px !important; }
-  .cart-section { width: 85% !important; }
+  .cart-section { width: 88% !important; left: -100% !important; }
+  .cart-section.open { left: 0 !important; }
 }
