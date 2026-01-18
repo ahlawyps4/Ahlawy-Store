@@ -1,253 +1,145 @@
-/* ============ AHLAWY STORE - FULL THEME ============ */
+/* ============ AHLAWY STORE - OFFICIAL THEME v1.02 ============ */
 :root {
   --main-red: #cc0000;
   --dark-red: #8b0000;
   --gold: #d4af37;
   --dark-bg: #0a0707;
   --card-bg: rgba(255, 255, 255, 0.06);
+  --glass: rgba(255, 255, 255, 0.1);
 }
 
-.home-page {
+/* التنسيق العام وخلفية أهلاوية */
+body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial;
-  /* تدرج أهلاوي فخم يناسب الـ PS4 */
+  font-family: system-ui, -apple-system, sans-serif;
   background: 
     radial-gradient(1000px 500px at 70% -10%, rgba(204, 0, 0, 0.25), transparent 60%),
-    radial-gradient(800px 400px at 10% 10%, rgba(139, 0, 0, 0.20), transparent 55%),
-    linear-gradient(180deg, var(--dark-bg) 0%, #1a0b0b 50%, var(--dark-bg) 100%);
+    linear-gradient(180deg, var(--dark-bg) 0%, #1a0b0b 100%);
   color: #eef2ff;
   min-height: 100vh;
+  direction: rtl;
 }
 
-.home-header { padding: 18px 14px 6px; }
-
-.home-brand {
-  max-width: 980px;
-  margin: 0 auto;
+/* الهيدر (Header) */
+.store-header {
+  padding: 15px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--glass);
 }
 
-.home-logo {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(204, 0, 0, 0.3); /* إطار أحمر خفيف */
-  padding: 8px;
-}
+.brand img { width: 45px; vertical-align: middle; margin-left: 10px; }
+.brand-text strong { color: #fff; font-size: 18px; display: block; }
+.brand-text span { color: var(--gold); font-size: 12px; }
 
-.home-brand-text h1 { margin: 0; font-size: 18px; letter-spacing: .3px; color: #fff; }
-.home-brand-text p { margin: 4px 0 0; opacity: .85; font-size: 13px; color: var(--gold); } /* لمسة ذهبية */
-
-.home-wrap {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 14px;
-}
-
-.home-hero {
-  text-align: center;
-  padding: 18px 10px 10px;
-}
-
-.home-hero h2 { margin: 0 0 6px; font-size: 34px; font-weight: 800; color: #fff; }
-.home-hero p { margin: 0; opacity: .85; font-size: 16px; }
-
-.platforms {
-  margin-top: 18px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-
-/* الكارت بتنسيق أهلاوي */
-.platform-card {
-  text-decoration: none;
-  color: inherit;
-  border-radius: 22px;
-  padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: var(--card-bg);
-  box-shadow: 0 18px 50px rgba(0,0,0,.35);
-  transition: transform .18s ease, background .18s ease, border-color .18s ease;
-  position: relative;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  align-items: center;
-}
-
-/* كارت PS4 أحمر */
-.platform-card.ps4 {
-  background: linear-gradient(135deg, rgba(204, 0, 0, 0.35), rgba(255, 255, 255, 0.06));
-  border-color: rgba(204, 0, 0, 0.4);
-}
-
-/* كارت PS5 أبيض/رمادي ملكي */
-.platform-card.ps5 {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(139, 0, 0, 0.10));
-}
-
-.platform-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--main-red);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.platform-content { text-align: center; }
-
-.chip {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 800;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(204, 0, 0, 0.2);
-  border: 1px solid rgba(204, 0, 0, 0.4);
-  color: #fff;
-}
-
-.platform-card h3 { margin: 8px 0 6px; font-size: 26px; font-weight: 900; }
-.platform-card p { margin: 0 0 14px; opacity: .88; line-height: 1.6; }
-
-.btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 16px;
-  font-weight: 900;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.10);
-  transition: 0.3s;
-}
-
-.platform-card.ps4 .btn { background: rgba(204, 0, 0, 0.4); }
-.platform-card.ps5 .btn { background: rgba(255, 255, 255, 0.15); }
-
-.platform-media img {
-  width: 140px;
-  max-width: 100%;
-  filter: drop-shadow(0 10px 25px rgba(0,0,0,0.45));
-  border-radius: 18px;
-  padding: 14px;
-}
-
-.home-footer {
-  text-align: center;
-  opacity: .75;
-  padding: 18px 10px 26px;
-  color: var(--gold);
-}
-
-/* شاشات كبيرة / تلفزيون PS4 */
-@media (min-width:820px) {
-  .platforms { grid-template-columns: 1fr 1fr; }
-  .platform-card { grid-template-columns: auto 1fr; min-height: 220px; }
-  .platform-media.right { order: 2; justify-content: flex-end; }
-  .platform-media.left { order: 1; justify-content: flex-start; }
-  .platform-content { text-align: right; }
-  .platform-card.ps5 .platform-media.left { margin-right: 28px; }
-  .platform-card.ps5 .platform-media.left img { transform: translateX(-18px); }
-}
-/* ============ تسيق شبكة الألعاب (لـ 500 لعبة) ============ */
+/* حاوية الألعاب (Grid) - محسنة للـ 500 لعبة */
 .games {
   display: grid;
-  /* تقسيم الشاشة لأعمدة تلقائية تناسب التلفزيون والموبايل */
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* تنسيق كارت اللعبة الفردي */
+/* كارت اللعبة (Game Card) */
 .game-item {
   background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 18px;
-  padding: 12px;
+  border: 1px solid var(--glass);
+  border-radius: 15px;
+  padding: 10px;
   text-align: center;
-  transition: 0.3s ease;
+  transition: 0.3s;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .game-item:hover {
   transform: translateY(-5px);
   border-color: var(--main-red);
-  background: rgba(204, 0, 0, 0.05);
+  background: rgba(204, 0, 0, 0.1);
 }
 
-/* تنسيق صور الألعاب (بوسترات) */
 .game-item img {
   width: 100%;
-  aspect-ratio: 2/3; /* أبعاد بوستر اللعبة الحقيقي */
+  aspect-ratio: 2/3;
   object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  margin-bottom: 8px;
 }
 
 .game-item h3 {
   font-size: 14px;
-  margin: 8px 0;
-  height: 40px; /* توحيد الطول لجميع العناوين */
+  height: 35px;
   overflow: hidden;
-  color: #fff;
+  margin: 5px 0;
 }
 
-/* زر الإضافة للسلة داخل المتجر */
-.game-item .add-to-cart {
+.add-to-cart {
   background: var(--main-red);
   color: white;
   border: none;
-  padding: 10px;
-  border-radius: 12px;
-  font-weight: bold;
+  padding: 8px;
+  border-radius: 8px;
   cursor: pointer;
-  width: 100%;
-  transition: 0.2s;
+  font-weight: bold;
 }
 
-.game-item .add-to-cart:active {
-  transform: scale(0.95);
-  background: var(--dark-red);
+/* سلة المشتريات (Cart Side Panel) */
+.cart-section {
+  position: fixed;
+  top: 0;
+  left: -100%; /* مخفية في البداية */
+  width: 300px;
+  height: 100%;
+  background: #111;
+  z-index: 1000;
+  transition: 0.4s;
+  padding: 20px;
+  box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+  border-right: 2px solid var(--main-red);
 }
 
-/* تحسين العرض للموبايل */
+.cart-section.open { left: 0; }
+
+.cart-section h2 { color: var(--gold); border-bottom: 1px solid var(--glass); padding-bottom: 10px; }
+
+#cart-list { list-style: none; padding: 0; max-height: 60vh; overflow-y: auto; }
+
+#cart-list li {
+  display: flex;
+  justify-content: space-between;
+  background: var(--glass);
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+.remove-btn { background: #555; border: none; color: #fff; border-radius: 3px; cursor: pointer; }
+
+/* أزرار السلة */
+#generate-qr { width: 100%; background: #25d366; color: white; padding: 10px; border: none; border-radius: 5px; margin-top: 10px; cursor: pointer; font-weight: bold; }
+#clear-cart { width: 100%; background: #444; color: white; padding: 10px; border: none; border-radius: 5px; margin-top: 5px; cursor: pointer; }
+
+/* نظام البحث */
+#search-input {
+  background: var(--glass);
+  border: 1px solid var(--glass);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  width: 200px;
+}
+
+/* الموبايل */
 @media (max-width: 480px) {
-  .games {
-    grid-template-columns: repeat(2, 1fr); /* صورتين في الصف الواحد للموبايل */
-    gap: 10px;
-    padding: 10px;
-  }
-}
-/* تنسيق شبكة الألعاب لتعمل مع السكربت الجديد */
-.games {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
-    gap: 15px !important;
-    padding: 15px !important;
-}
-
-.game-item {
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 15px !important;
-    padding: 10px !important;
-    text-align: center !important;
-}
-
-.game-item img {
-    width: 100% !important;
-    border-radius: 10px !important;
-    aspect-ratio: 2/3 !important;
-    object-fit: cover !important;
+  .games { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
+  #search-input { width: 120px; }
 }
