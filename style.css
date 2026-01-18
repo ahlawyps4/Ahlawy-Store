@@ -1,4 +1,4 @@
-/* ============ AHLAWY STORE - OFFICIAL THEME v1.02 ============ */
+/* ============ AHLAWY STORE - FINAL STABLE v1.02 ============ */
 :root {
   --main-red: #cc0000;
   --dark-red: #8b0000;
@@ -8,7 +8,7 @@
   --glass: rgba(255, 255, 255, 0.1);
 }
 
-/* التنسيق العام وخلفية أهلاوية */
+/* 1. التنسيق الأساسي */
 body {
   margin: 0;
   font-family: system-ui, -apple-system, sans-serif;
@@ -18,37 +18,74 @@ body {
   color: #eef2ff;
   min-height: 100vh;
   direction: rtl;
+  overflow-x: hidden;
 }
 
-/* الهيدر (Header) */
+/* 2. الهيدر والبحث */
 .store-header {
-  padding: 15px;
+  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(15px);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
   border-bottom: 1px solid var(--glass);
 }
 
-.brand img { width: 45px; vertical-align: middle; margin-left: 10px; }
-.brand-text strong { color: #fff; font-size: 18px; display: block; }
-.brand-text span { color: var(--gold); font-size: 12px; }
+.brand { display: flex; align-items: center; text-decoration: none; }
+.brand img { width: 40px; margin-left: 10px; border-radius: 8px; }
+#search-input {
+  background: var(--glass);
+  border: 1px solid var(--glass);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  width: 250px;
+  outline: none;
+}
 
-/* حاوية الألعاب (Grid) - محسنة للـ 500 لعبة */
-.games {
+/* 3. تنسيق الصفحة الرئيسية (كروت المنصات) - حل مشكلة الحجم */
+.platforms {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 15px;
-  padding: 20px;
-  max-width: 1200px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  padding: 40px 20px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
-/* كارت اللعبة (Game Card) */
+.platform-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(204,0,0,0.1));
+  border: 1px solid var(--glass);
+  border-radius: 25px;
+  padding: 30px;
+  text-align: center;
+  text-decoration: none;
+  color: white;
+  transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.platform-card:hover { transform: translateY(-10px); border-color: var(--main-red); }
+
+/* تقييد حجم الصور الضخمة في الرئيسية */
+.platform-media img {
+  width: 180px !important;
+  height: auto !important;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
+  margin-bottom: 20px;
+}
+
+/* 4. تنسيق شبكة الألعاب (المتجر) */
+.games {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)) !important;
+  gap: 15px !important;
+  padding: 20px !important;
+}
+
 .game-item {
   background: var(--card-bg);
   border: 1px solid var(--glass);
@@ -56,90 +93,46 @@ body {
   padding: 10px;
   text-align: center;
   transition: 0.3s;
-  display: flex;
-  flex-direction: column;
 }
 
-.game-item:hover {
-  transform: translateY(-5px);
-  border-color: var(--main-red);
-  background: rgba(204, 0, 0, 0.1);
-}
-
+/* ضمان ثبات مقاس بوسترات الألعاب */
 .game-item img {
-  width: 100%;
-  aspect-ratio: 2/3;
-  object-fit: cover;
+  width: 100% !important;
+  aspect-ratio: 2/3 !important;
+  object-fit: cover !important;
   border-radius: 10px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  background: #222; /* لضمان عدم ظهور مساحة بيضاء أثناء التحميل */
 }
 
-.game-item h3 {
-  font-size: 14px;
-  height: 35px;
-  overflow: hidden;
-  margin: 5px 0;
-}
-
-.add-to-cart {
-  background: var(--main-red);
-  color: white;
-  border: none;
-  padding: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-/* سلة المشتريات (Cart Side Panel) */
+/* 5. سلة المشتريات والـ QR */
 .cart-section {
   position: fixed;
   top: 0;
-  left: -100%; /* مخفية في البداية */
-  width: 300px;
+  left: -100%;
+  width: 320px;
   height: 100%;
-  background: #111;
-  z-index: 1000;
-  transition: 0.4s;
-  padding: 20px;
-  box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-  border-right: 2px solid var(--main-red);
+  background: #0d0d0d;
+  z-index: 2000;
+  transition: 0.5s ease;
+  padding: 25px;
+  border-right: 3px solid var(--main-red);
 }
 
 .cart-section.open { left: 0; }
 
-.cart-section h2 { color: var(--gold); border-bottom: 1px solid var(--glass); padding-bottom: 10px; }
-
-#cart-list { list-style: none; padding: 0; max-height: 60vh; overflow-y: auto; }
-
-#cart-list li {
-  display: flex;
-  justify-content: space-between;
-  background: var(--glass);
-  margin-bottom: 8px;
+#qr-code {
+  background: white;
   padding: 10px;
-  border-radius: 5px;
-  font-size: 13px;
+  border-radius: 10px;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
 }
 
-.remove-btn { background: #555; border: none; color: #fff; border-radius: 3px; cursor: pointer; }
-
-/* أزرار السلة */
-#generate-qr { width: 100%; background: #25d366; color: white; padding: 10px; border: none; border-radius: 5px; margin-top: 10px; cursor: pointer; font-weight: bold; }
-#clear-cart { width: 100%; background: #444; color: white; padding: 10px; border: none; border-radius: 5px; margin-top: 5px; cursor: pointer; }
-
-/* نظام البحث */
-#search-input {
-  background: var(--glass);
-  border: 1px solid var(--glass);
-  color: white;
-  padding: 8px 15px;
-  border-radius: 20px;
-  width: 200px;
-}
-
-/* الموبايل */
+/* 6. الموبايل */
 @media (max-width: 480px) {
-  .games { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
-  #search-input { width: 120px; }
+  .games { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .platform-media img { width: 140px !important; }
+  #search-input { width: 130px; }
 }
