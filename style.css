@@ -27,7 +27,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0,0,0,0.9);
+  background: rgba(0,0,0,0.95); /* زيادة التعتيم لبروز العناصر */
   backdrop-filter: blur(15px);
   position: sticky;
   top: 0;
@@ -36,101 +36,150 @@ body {
 }
 
 .brand { display: flex; align-items: center; text-decoration: none; color: white; }
-.brand img { width: 40px; margin-left: 10px; border-radius: 8px; }
+.brand img { width: 40px; height: 40px; margin-left: 10px; border-radius: 8px; object-fit: cover; }
 
 .cart-trigger {
   background: var(--main-red);
-  padding: 8px 15px;
-  border-radius: 20px;
+  padding: 8px 18px;
+  border-radius: 25px;
   cursor: pointer;
   font-weight: bold;
   transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(204, 0, 0, 0.3);
 }
 
 /* 3. شبكة الألعاب */
 .games {
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)) !important;
-  gap: 15px !important;
-  padding: 20px !important;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
+  gap: 20px !important;
+  padding: 25px !important;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .game-item {
   background: var(--card-bg);
   border: 1px solid var(--glass);
-  border-radius: 15px;
-  padding: 10px;
+  border-radius: 18px;
+  padding: 12px;
   text-align: center;
-  transition: 0.3s;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.game-item:hover {
+  transform: translateY(-5px);
+  border-color: var(--main-red);
 }
 
 .game-item img {
   width: 100% !important;
   aspect-ratio: 2/3 !important;
   object-fit: cover !important;
-  border-radius: 10px;
-  margin-bottom: 10px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.game-item h3 {
+  font-size: 14px;
+  margin: 10px 0;
+  height: 40px;
+  overflow: hidden;
 }
 
 .add-to-cart-btn {
   background: var(--main-red);
   color: white;
   border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 10px;
   cursor: pointer;
   width: 100%;
   font-weight: bold;
+  transition: 0.2s;
 }
 
-/* 4. السلة الجانبية (تم حل مشكلة الخط الأحمر) */
+.add-to-cart-btn:active { transform: scale(0.95); }
+
+/* 4. السلة الجانبية (الحل النهائي) */
 .cart-section {
   position: fixed !important;
   top: 0 !important;
-  left: -350px !important; /* مخفية تماماً */
-  width: 320px !important; /* عرض اللوحة بالكامل */
+  left: -350px !important; /* خارج الشاشة تماماً */
+  width: 320px !important; 
   height: 100vh !important;
   background: #0d0d0d !important;
   z-index: 99999 !important;
   transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
   padding: 25px !important;
   border-right: 4px solid var(--main-red) !important;
-  box-shadow: 15px 0 40px rgba(0,0,0,0.9);
+  box-shadow: 15px 0 50px rgba(0,0,0,0.95);
   overflow-y: auto;
-  box-sizing: border-box; /* لضمان عدم خروج المحتوى */
+  box-sizing: border-box;
 }
 
 .cart-section.open {
-  left: 0 !important; /* تظهر بالكامل */
+  left: 0 !important; /* تظهر بسلاسة عند الضغط */
 }
 
 /* 5. الـ QR Code داخل السلة */
 #qr-container {
   background: white !important;
   padding: 15px !important;
-  border-radius: 12px !important;
-  margin: 20px 0 !important;
+  border-radius: 15px !important;
+  margin: 25px 0 !important;
   text-align: center !important;
-  display: none; /* يتم فتحه عبر الجافاسكربت */
+  display: none; 
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+#qrcode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #qrcode img {
-  margin: 0 auto !important;
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 .close-cart {
-  background: none;
+  background: rgba(255,255,255,0.1);
   border: none;
   color: white;
-  font-size: 32px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 24px;
   cursor: pointer;
   float: left;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* 6. استجابة الموبايل */
+/* 6. قائمة السلة */
+#cart-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+#cart-list li {
+  background: #1a1a1a;
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-right: 3px solid var(--gold);
+}
+
+/* 7. استجابة الموبايل */
 @media (max-width: 480px) {
-  .games { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-  .cart-section { width: 88% !important; left: -100% !important; }
+  .games { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; padding: 15px !important; }
+  .cart-section { width: 90% !important; left: -100% !important; }
   .cart-section.open { left: 0 !important; }
 }
