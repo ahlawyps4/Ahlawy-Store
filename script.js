@@ -5,24 +5,29 @@ let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 
 // 1. دالة تحميل الألعاب (معدلة لتعمل على GitHub Pages)
 async function loadGames() {
+    // تحديد المسار الصحيح سواء كنت في الصفحة الرئيسية أو داخل مجلد PS4
+    const jsonPath = window.location.pathname.includes('/PS4/') ? '../games.json' : './games.json';
+    
     try {
-        // الخروج من مجلد PS4 للوصول لملف games.json في المجلد الرئيسي
-        const response = await fetch('../games.json'); 
-        if (!response.ok) throw new Error("File not found");
+        const response = await fetch(jsonPath); 
+        if (!response.ok) throw new Error("لم يتم العثور على ملف الألعاب");
         
         const games = await response.json();
         const container = document.getElementById('games-container');
-        // جلب نوع المنصة من كود HTML (PS4 أو PS5)
         const currentPlatform = document.body.getAttribute('data-platform');
 
         if (!container) return;
         container.innerHTML = '';
         
-        // تصفية الألعاب بناءً على المنصة
         const filteredGames = games.filter(game => game.platform === currentPlatform);
 
+        if (filteredGames.length === 0) {
+            container.innerHTML = "<p style='text-align:center;'>لا توجد ألعاب متوفرة حالياً</p>";
+            return;
+        }
+
         filteredGames.forEach(game => {
-            const card = `
+            container.innerHTML += `
                 <div class="game-item">
                     <div class="game-media">
                         <img src="../${game.img}" alt="${game.title}" onerror="this.src='../logo.png'">
@@ -32,16 +37,12 @@ async function loadGames() {
                         <button class="add-to-cart-btn" onclick="addToCart('${game.title.replace(/'/g, "\\"')}')">إضافة للسلة</button>
                     </div>
                 </div>`;
-            container.innerHTML += card;
         });
-
-        updateCartCount();
-        updateCartList();
     } catch (error) {
-        console.error("خطأ في التحميل:", error);
+        console.error("خطأ:", error);
+        document.getElementById('games-container').innerHTML = "<p>خطأ في تحميل الألعاب، تأكد من ملف games.json</p>";
     }
 }
-
 // 2. وظائف السلة واللوحة الجانبية
 function toggleCart() {
     const cartSection = document.getElementById('cart-section');
