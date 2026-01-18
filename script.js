@@ -1,35 +1,20 @@
-/* ============ AHLAWY STORE - FINAL REPAIR ============ */
+/* ============ AHLAWY STORE - QR & CART SYSTEM v1.02 ============ */
 
 let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 
-// 1. دالة تحميل الألعاب (تم التأكد من المسارات)
+// 1. دالة تحميل الألعاب
 async function loadGames() {
-    console.log("جاري محاولة تحميل الألعاب..."); // للتأكد أن الدالة تعمل
     try {
-        // الخروج من مجلد PS4 للوصول لملف games.json
         const response = await fetch('../games.json'); 
-        
         if (!response.ok) throw new Error("فشل الوصول لملف JSON");
-        
         const games = await response.json();
         const container = document.getElementById('games-container');
         const currentPlatform = document.body.getAttribute('data-platform');
 
-        if (!container) {
-            console.error("خطأ: لم يتم العثور على games-container");
-            return;
-        }
-
+        if (!container) return;
         container.innerHTML = '';
         
-        // تصفية الألعاب
         const filteredGames = games.filter(game => game.platform === currentPlatform);
-        console.log("عدد الألعاب التي تم العثور عليها:", filteredGames.length);
-
-        if (filteredGames.length === 0) {
-            container.innerHTML = "<p style='text-align:center; grid-column: 1/-1;'>لا توجد ألعاب لهذه المنصة حالياً.</p>";
-            return;
-        }
 
         filteredGames.forEach(game => {
             const card = `
@@ -39,23 +24,21 @@ async function loadGames() {
                     </div>
                     <div class="game-content">
                         <h3>${game.title}</h3>
-                        <button class="add-to-cart-btn" onclick="addToCart('${game.title.replace(/'/g, "\\'")}')">إضافة للسلة</button>
+                        <button class="add-to-cart-btn" onclick="addToCart('${game.title.replace(/'/g, "\\"')}')">إضافة للسلة</button>
                     </div>
                 </div>`;
             container.innerHTML += card;
         });
 
-        // تحديث واجهة السلة عند التحميل
         updateCartCount();
         updateCartList();
 
     } catch (error) {
-        console.error("حدث خطأ فني:", error);
-        document.getElementById('games-container').innerHTML = `<p style='text-align:center; color:red;'>حدث خطأ في تحميل الألعاب: ${error.message}</p>`;
+        console.error("خطأ:", error);
     }
 }
 
-// 2. وظائف السلة
+// 2. وظائف السلة واللوحة الجانبية
 function toggleCart() {
     const cartSection = document.getElementById('cart-section');
     if (cartSection) {
@@ -69,10 +52,9 @@ function addToCart(title) {
     updateCartCount();
     updateCartList();
     
+    // فتح السلة تلقائياً
     const cartSection = document.getElementById('cart-section');
-    if (cartSection && !cartSection.classList.contains('open')) {
-        cartSection.classList.add('open');
-    }
+    if (cartSection) cartSection.classList.add('open');
 }
 
 function updateCartCount() {
@@ -85,14 +67,39 @@ function updateCartList() {
     if (listElement) {
         if (cart.length === 0) {
             listElement.innerHTML = '<li style="color:#888; text-align:center; padding:10px;">السلة فارغة</li>';
+            document.getElementById('qr-container').style.display = 'none'; // إخفاء الـ QR لو السلة فضيت
         } else {
             listElement.innerHTML = cart.map((item, index) => `
-                <li style="display:flex; justify-content:space-between; align-items:center; background:#222; padding:8px; margin-bottom:8px; border-radius:5px;">
-                    <span style="font-size:12px;">${item}</span>
+                <li style="display:flex; justify-content:space-between; align-items:center; background:#222; padding:8px; margin-bottom:8px; border-radius:5px; border:1px solid #333;">
+                    <span style="font-size:12px; color:#fff;">${item}</span>
                     <button onclick="removeFromCart(${index})" style="background:#ff4444; border:none; color:white; padding:2px 6px; border-radius:3px; cursor:pointer;">×</button>
                 </li>
             `).join('');
+            // توليد الـ QR تلقائياً عند تحديث القائمة
+            generateQR();
         }
+    }
+}
+
+// 3. دالة توليد الـ QR Code
+function generateQR() {
+    const qrDiv = document.getElementById('qrcode');
+    const qrContainer = document.getElementById('qr-container');
+    
+    if (cart.length > 0 && qrDiv) {
+        qrDiv.innerHTML = ""; // مسح القديم
+        qrContainer.style.display = 'block';
+        
+        const orderText = "طلب من أهلاوي ستور:\n" + cart.map((t, i) => `${i+1}- ${t}`).join("\n");
+        
+        new QRCode(qrDiv, {
+            text: orderText,
+            width: 150,
+            height: 150,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
     }
 }
 
@@ -118,5 +125,4 @@ function sendWhatsApp() {
     window.open(`https://wa.me/201021424781?text=${encodeURIComponent(message)}`);
 }
 
-// تشغيل التحميل عند فتح الصفحة مباشرة
 document.addEventListener('DOMContentLoaded', loadGames);

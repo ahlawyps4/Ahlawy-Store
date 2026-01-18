@@ -27,27 +27,29 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.85);
   backdrop-filter: blur(15px);
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 5000; /* رفع قيمة z-index للهيدر */
   border-bottom: 1px solid var(--glass);
 }
 
-.brand { display: flex; align-items: center; text-decoration: none; }
+.brand { display: flex; align-items: center; text-decoration: none; color: white; }
 .brand img { width: 40px; margin-left: 10px; border-radius: 8px; }
-#search-input {
-  background: var(--glass);
-  border: 1px solid var(--glass);
-  color: white;
+
+/* زر السلة في الهيدر */
+.cart-trigger {
+  background: var(--main-red);
   padding: 8px 15px;
   border-radius: 20px;
-  width: 250px;
-  outline: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
 }
+.cart-trigger:hover { background: var(--dark-red); }
 
-/* 3. تنسيق الصفحة الرئيسية (كروت المنصات) - حل مشكلة الحجم */
+/* 3. تنسيق الصفحة الرئيسية */
 .platforms {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -68,9 +70,6 @@ body {
   transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.platform-card:hover { transform: translateY(-10px); border-color: var(--main-red); }
-
-/* تقييد حجم الصور الضخمة في الرئيسية */
 .platform-media img {
   width: 180px !important;
   height: auto !important;
@@ -78,7 +77,7 @@ body {
   margin-bottom: 20px;
 }
 
-/* 4. تنسيق شبكة الألعاب (المتجر) */
+/* 4. تنسيق شبكة الألعاب */
 .games {
   display: grid !important;
   grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)) !important;
@@ -95,48 +94,71 @@ body {
   transition: 0.3s;
 }
 
-/* ضمان ثبات مقاس بوسترات الألعاب */
 .game-item img {
   width: 100% !important;
   aspect-ratio: 2/3 !important;
   object-fit: cover !important;
   border-radius: 10px;
   margin-bottom: 10px;
-  background: #222; /* لضمان عدم ظهور مساحة بيضاء أثناء التحميل */
 }
 
-//* تنسيق السلة الجانبية الأساسي */
+.add-to-cart-btn {
+  background: var(--main-red);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
+}
+
+/* 5. تنسيق السلة الجانبية (الحل النهائي للظهور الجانبي) */
 .cart-section {
-    position: fixed !important;
-    top: 0 !important;
-    left: -320px !important; /* تبدأ مخفية تماماً جهة اليسار */
-    width: 300px !important;
-    height: 100vh !important;
-    background: #111 !important;
-    z-index: 9999 !important;
-    transition: 0.4s ease-in-out !important; /* سرعة الانزلاق */
-    padding: 20px !important;
-    border-right: 2px solid #cc0000 !important;
-    display: block !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: -330px !important; /* تبدأ خارج الشاشة */
+  width: 310px !important;
+  height: 100vh !important;
+  background: #0d0d0d !important;
+  z-index: 99999 !important; /* أعلى من أي عنصر آخر */
+  transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  padding: 20px !important;
+  border-right: 3px solid var(--main-red) !important;
+  box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+  overflow-y: auto;
 }
 
-/* الكلاس الذي يتم تفعيله بالجافاسكربت */
 .cart-section.open {
-    left: 0 !important; /* تحريك السلة لتظهر داخل الشاشة */
+  left: 0 !important; /* تظهر عند إضافة class "open" */
 }
 
-#qr-code {
+/* تنسيق منطقة الـ QR Code داخل السلة */
+#qr-container {
   background: white;
-  padding: 10px;
-  border-radius: 10px;
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#qrcode img, #qrcode canvas {
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.close-cart {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  float: left;
 }
 
 /* 6. الموبايل */
 @media (max-width: 480px) {
   .games { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
   .platform-media img { width: 140px !important; }
-  #search-input { width: 130px; }
+  .cart-section { width: 85% !important; }
 }
