@@ -229,3 +229,25 @@
     padding: 10px;
   }
 }
+/* تنسيق شبكة الألعاب لتعمل مع السكربت الجديد */
+.games {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
+    gap: 15px !important;
+    padding: 15px !important;
+}
+
+.game-item {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 15px !important;
+    padding: 10px !important;
+    text-align: center !important;
+}
+
+.game-item img {
+    width: 100% !important;
+    border-radius: 10px !important;
+    aspect-ratio: 2/3 !important;
+    object-fit: cover !important;
+}
