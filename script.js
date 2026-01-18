@@ -1,30 +1,25 @@
 /* ============ AHLAWY STORE - FINAL SYSTEM v1.02 ============ */
 
+// تعريف السلة وتحميلها من الذاكرة المحلية
 let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 
-// 1. دالة تحميل الألعاب (معدلة لضمان العرض)
+// 1. دالة تحميل الألعاب (معدلة لتعمل على GitHub Pages)
 async function loadGames() {
-    console.log("جاري تحميل البيانات من games.json..."); 
     try {
-        // الخروج من مجلد PS4 للوصول للمجلد الرئيسي
+        // الخروج من مجلد PS4 للوصول لملف games.json في المجلد الرئيسي
         const response = await fetch('../games.json'); 
-        
-        if (!response.ok) throw new Error("لم يتم العثور على ملف games.json - تأكد من مكانه في المجلد الرئيسي");
+        if (!response.ok) throw new Error("File not found");
         
         const games = await response.json();
         const container = document.getElementById('games-container');
+        // جلب نوع المنصة من كود HTML (PS4 أو PS5)
         const currentPlatform = document.body.getAttribute('data-platform');
 
         if (!container) return;
         container.innerHTML = '';
         
+        // تصفية الألعاب بناءً على المنصة
         const filteredGames = games.filter(game => game.platform === currentPlatform);
-        console.log("تم العثور على ألعاب لمنصة:", currentPlatform, filteredGames.length);
-
-        if (filteredGames.length === 0) {
-            container.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>لا توجد ألعاب حالياً لهذه المنصة.</p>";
-            return;
-        }
 
         filteredGames.forEach(game => {
             const card = `
@@ -42,12 +37,8 @@ async function loadGames() {
 
         updateCartCount();
         updateCartList();
-
     } catch (error) {
-        console.error("خطأ فني في التحميل:", error);
-        if (document.getElementById('games-container')) {
-            document.getElementById('games-container').innerHTML = `<p style='grid-column: 1/-1; text-align:center; color:red;'>فشل تحميل الألعاب: ${error.message}</p>`;
-        }
+        console.error("خطأ في التحميل:", error);
     }
 }
 
@@ -88,7 +79,7 @@ function updateCartList() {
         } else {
             listElement.innerHTML = cart.map((item, index) => `
                 <li style="display:flex; justify-content:space-between; align-items:center; background:#222; padding:8px; margin-bottom:8px; border-radius:5px; border:1px solid #333;">
-                    <span style="font-size:12px; color:#fff; text-align:right; flex:1; padding-right:5px;">${item}</span>
+                    <span style="font-size:12px; color:#fff; flex:1; text-align:right;">${item}</span>
                     <button onclick="removeFromCart(${index})" style="background:#ff4444; border:none; color:white; padding:2px 6px; border-radius:3px; cursor:pointer; margin-right:10px;">×</button>
                 </li>
             `).join('');
@@ -143,4 +134,5 @@ function sendWhatsApp() {
     window.open(`https://wa.me/201021424781?text=${encodeURIComponent(message)}`);
 }
 
+// تشغيل جلب الألعاب فور تحميل الصفحة
 document.addEventListener('DOMContentLoaded', loadGames);
