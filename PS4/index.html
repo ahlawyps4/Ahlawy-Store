@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AHLAWY STORE - PS4</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="manifest" href="../manifest.json">
+</head>
+
+<body class="store-page" data-platform="PS4">
+  
+  <header class="store-header">
+    <a class="brand" href="../index.html">
+      <img src="../logo.png" alt="AHLAWY STORE">
+      <div class="brand-text">
+        <strong>AHLAWY STORE</strong>
+        <span>قسم PS4</span>
+      </div>
+    </a>
+
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="بحث عن لعبة..." />
+    </div>
+
+    <nav class="store-nav">
+      <a href="../index.html">الرئيسية</a>
+      <a href="#games">الألعاب</a>
+      <a href="#contact">اتصل بنا</a>
+    </nav>
+
+    <div class="cart-icon">
+      <span id="cart-count">0</span>
+      <a href="#" id="show-cart">السلة</a>
+    </div>
+  </header>
+
+  <section class="store-intro">
+    <h1>Games PS4</h1>
+    <p>ألعاب تناسب كل الفئات — أحدث الإضافات في مكان واحد</p>
+  </section>
+
+  <section id="games-container" class="games">
+      <p style="text-align:center;">جاري تحميل مكتبة الألعاب...</p>
+  </section>
+
+  <section id="contact" class="contact">
+    <h2>اتصل بنا</h2>
+    <p>راسلنا على واتساب بعد اختيار الألعاب من السلة.</p>
+  </section>
+
+  <aside id="cart-section" class="cart-section">
+    <h2>سلة المشتريات</h2>
+    <ul id="cart-list"></ul>
+    <button id="clear-cart">إفراغ السلة</button>
+    <button id="close-cart">إغلاق</button>
+    <button id="generate-qr">إرسال الطلب</button>
+    <div id="qr-code"></div>
+  </aside>
+
+  <script src="../qrcode.min.js"></script>
+  <script src="../script.js"></script>
+</body>
+</html>
