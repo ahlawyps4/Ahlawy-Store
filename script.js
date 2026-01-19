@@ -1,4 +1,4 @@
-/* ============ AHLAWY STORE ENGINE - v2.3 (FIXED) ============ */
+/* ============ AHLAWY STORE ENGINE - v2.4 (OFFLINE & QR READY) ============ */
 
 let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 
@@ -43,11 +43,9 @@ async function loadGames() {
     }
 }
 
-// إضافة للسلة بدون فتحها تلقائياً
 function addToCart(gameTitle) {
     cart.push(gameTitle);
     saveAndRefresh();
-    // تم إزالة سطر فتح السلة من هنا بناءً على طلبك
 }
 
 function removeFromCart(index) {
@@ -60,7 +58,6 @@ function saveAndRefresh() {
     updateUI();
 }
 
-// دالة تحديث السلة والـ QR تلقائياً
 function updateUI() {
     const count = document.getElementById('cart-count');
     const list = document.getElementById('cart-list');
@@ -70,70 +67,66 @@ function updateUI() {
     
     if (list) {
         list.innerHTML = cart.map((item, i) => `
-            <li>
-                <span>${item}</span>
-                <button onclick="removeFromCart(${i})" class="remove-btn">حذف</button>
+            <li style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #333; color:white;">
+                <span style="font-size:13px; text-align:right;">${item}</span>
+                <button onclick="removeFromCart(${i})" class="remove-btn" style="color:#ff4d4d; background:none; border:none; cursor:pointer;">حذف</button>
             </li>
         `).join('');
     }
 
-    // إذا كانت السلة فارغة نخفي الـ QR، وإذا كان فيها ألعاب نجهزه
     if (cart.length > 0) {
-        generateBasketQR();
+        if (qrContainer) qrContainer.style.display = "block";
+        // إعطاء مهلة بسيطة للمتصفح ليرسم الـ QR بشكل صحيح
+        setTimeout(generateBasketQR, 100);
     } else {
         if (qrContainer) qrContainer.style.display = "none";
     }
 }
 
-// دالة توليد الـ QR داخل السلة
 function generateBasketQR() {
-    const qrContainer = document.getElementById('qr-container');
     const qrcodeElement = document.getElementById("qrcode");
-    
-    if (!qrcodeElement) return;
+    if (!qrcodeElement || typeof QRCode === 'undefined') return;
 
     const msg = "طلب جديد من أهلاوي ستور 🦅:\n" + cart.map((t, i) => `${i+1}- ${t}`).join("\n");
     const whatsappUrl = `https://wa.me/201021424781?text=${encodeURIComponent(msg)}`;
 
-    qrcodeElement.innerHTML = ""; // تنظيف القديم
-    qrContainer.style.display = "block"; // إظهار القسم
+    qrcodeElement.innerHTML = ""; // تنظيف الكود القديم
 
     new QRCode(qrcodeElement, {
         text: whatsappUrl,
-        width: 150, // حجم مناسب للسلة الجانبية
+        width: 150,
         height: 150,
         colorDark : "#000000",
         colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.M
+        correctLevel : QRCode.CorrectLevel.H // رفع مستوى الحماية لسهولة المسح
     });
-}function toggleCart() {
+}
+
+function toggleCart() {
     const cartSection = document.getElementById('cart-section');
     if (cartSection) cartSection.classList.toggle('open');
 }
 
-// إغلاق السلة عند الضغط في أي مكان خارجها (مع استثناء زر الحذف)
 document.addEventListener('click', (event) => {
     const cartSection = document.getElementById('cart-section');
     const cartTrigger = document.querySelector('.cart-trigger');
-    
-    // التحقق إذا كانت السلة مفتوحة
+    if (!cartSection || !cartTrigger) return;
+
     if (cartSection.classList.contains('open')) {
-        // لو الضغطة بره السلة وبره زرار فتح السلة وبره زرار الحذف
         if (!cartSection.contains(event.target) && 
             !cartTrigger.contains(event.target) && 
             !event.target.classList.contains('remove-btn')) { 
-            
             cartSection.classList.remove('open');
         }
     }
 });
+
 function sendWhatsApp() {
     if (cart.length === 0) {
         alert("السلة فارغة!");
         return;
     }
     const msg = "طلب جديد من أهلاوي ستور 🦅:\n" + cart.map((t, i) => `${i+1}- ${t}`).join("\n");
-    // استخدام api.whatsapp لضمان فتح التطبيق أو الويب بشكل أفضل
     window.open(`https://api.whatsapp.com/send?phone=201021424781&text=${encodeURIComponent(msg)}`);
 }
 
