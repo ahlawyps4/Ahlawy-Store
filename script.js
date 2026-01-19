@@ -1,11 +1,11 @@
 /* ============ AHLAWY STORE ENGINE - v2.2 (FINAL) ============ */
 
-// 1. إدارة السلة
+// 1. إدارة السلة (جلب البيانات المخزنة)
 let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 
-// 2. دالة جلب الألعاب
+// 2. دالة جلب الألعاب من ملف JSON
 async function loadGames() {
-    // تحديد المسارات الذكية
+    // تحديد المسارات الذكية لضمان عمل الموقع داخل المجلدات (PS4/PS5)
     const isSubFolder = window.location.pathname.includes('/PS4/') || window.location.pathname.includes('/PS5/');
     const jsonPath = isSubFolder ? '../games.json' : './games.json';
     const baseAssetPath = isSubFolder ? '../' : './';
@@ -21,6 +21,7 @@ async function loadGames() {
         if (!container || !platform) return;
         container.innerHTML = '';
 
+        // تصفية الألعاب حسب القسم (PS4 أو PS5)
         const filtered = games.filter(g => g.platform === platform);
 
         if (filtered.length === 0) {
@@ -29,7 +30,7 @@ async function loadGames() {
         }
 
         filtered.forEach(game => {
-            // استخدام baseAssetPath لضمان عمل الصور من أي مجلد
+            // المسار الصحيح للصورة
             const imgUrl = baseAssetPath + game.img;
             
             container.innerHTML += `
@@ -44,7 +45,7 @@ async function loadGames() {
                 </div>`;
         });
     } catch (err) {
-        console.error("Fetch Error:", err);
+        console.error("خطأ في التحميل:", err);
     }
 }
 
@@ -52,6 +53,7 @@ async function loadGames() {
 function addToCart(gameTitle) {
     cart.push(gameTitle);
     saveAndRefresh();
+    // فتح السلة تلقائياً عند إضافة لعبة
     document.getElementById('cart-section').classList.add('open');
 }
 
@@ -71,26 +73,30 @@ function updateUI() {
     if (count) count.innerText = cart.length;
     if (list) {
         list.innerHTML = cart.map((item, i) => `
-            <li style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #333; color:white;">
-                <span style="font-size:13px;">${item}</span>
-                <button onclick="removeFromCart(${i})" style="color:red; background:none; border:none; cursor:pointer;">X</button>
+            <li style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #333; color:white;">
+                <span style="font-size:13px; text-align:right;">${item}</span>
+                <button onclick="removeFromCart(${i})" style="color:#ff4d4d; background:none; border:none; cursor:pointer; font-weight:bold; padding:5px;">حذف</button>
             </li>
         `).join('');
     }
 }
 
 function toggleCart() {
-    document.getElementById('cart-section').classList.toggle('open');
+    const cartSection = document.getElementById('cart-section');
+    if (cartSection) cartSection.classList.toggle('open');
 }
 
-// 4. إرسال الطلب (بياناتك مسجلة عندي)
+// 4. إرسال الطلب واتساب
 function sendWhatsApp() {
-    if (cart.length === 0) return alert("السلة فارغة!");
+    if (cart.length === 0) {
+        alert("السلة فارغة! أضف بعض الألعاب أولاً.");
+        return;
+    }
     const msg = "طلب جديد من أهلاوي ستور 🦅:\n" + cart.map((t, i) => `${i+1}- ${t}`).join("\n");
     window.open(`https://wa.me/201021424781?text=${encodeURIComponent(msg)}`);
 }
 
-// تشغيل عند التحميل
+// تشغيل الدوال عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', () => {
     loadGames();
     updateUI();
