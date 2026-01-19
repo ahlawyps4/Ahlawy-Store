@@ -32,16 +32,22 @@
         </div>
     </main>
 
-    <aside id="cart-section" class="cart-section">
-        <div class="cart-header">
-            <h3>سلة المشتريات</h3>
-            <button class="close-btn" onclick="toggleCart()">×</button>
+    <div id="cart-section" class="cart-section">
+    <div class="cart-header">
+        <h2>سلة الطلبات</h2>
+        <button onclick="toggleCart()" class="close-cart">×</button>
+    </div>
+    <ul id="cart-list"></ul>
+    
+    <div class="cart-footer">
+        <button onclick="sendWhatsApp()" class="whatsapp-btn">إرسال الطلب واتساب</button>
+        
+        <div id="qr-container" style="margin-top: 20px; text-align: center; background: white; padding: 10px; border-radius: 10px; display: none;">
+            <div id="qrcode" style="display: flex; justify-content: center;"></div>
+            <p style="color: black; font-size: 12px; margin-top: 5px; font-weight: bold;">امسح الكود لطلب الألعاب 🦅</p>
         </div>
-        <ul id="cart-list"></ul>
-        <div class="cart-footer">
-            <button class="whatsapp-btn" onclick="sendWhatsApp()">إرسال الطلب واتساب</button>
-        </div>
-    </aside>
+    </div>
+</div>
 
     <script src="../script.js"></script>
 </body>
