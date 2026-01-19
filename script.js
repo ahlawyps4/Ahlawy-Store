@@ -5,13 +5,17 @@ let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 
 // 1. دالة تحميل الألعاب (معدلة لتعمل على GitHub Pages)
 async function loadGames() {
-    // هذا التعديل يضمن أن السكربت سيعرف المسار سواء كان في المجلد الرئيسي أو الفرعي على GitHub
+    // تحديد المسار الأساسي للمشروع على جيت هاب
+    const repoName = '/Ahlawy-Store/';
     const isSubFolder = window.location.pathname.includes('/PS4/') || window.location.pathname.includes('/PS5/');
-    const jsonPath = isSubFolder ? '../games.json' : './games.json';
+    
+    // الحل السحري: استخدام المسار الكامل للملف لضمان وصول المتصفح إليه
+    const jsonPath = window.location.origin + repoName + 'games.json';
     
     try {
+        console.log("حاول جلب البيانات من:", jsonPath); // لمراقبة العملية
         const response = await fetch(jsonPath); 
-        if (!response.ok) throw new Error("File not found at: " + jsonPath);
+        if (!response.ok) throw new Error("لم يتم العثور على ملف الألعاب");
         
         const games = await response.json();
         const container = document.getElementById('games-container');
@@ -28,13 +32,13 @@ async function loadGames() {
         }
 
         filteredGames.forEach(game => {
-            // إضافة ../ للصور فقط إذا كنا داخل مجلد فرعي
-            const imagePath = isSubFolder ? `../${game.img}` : `./${game.img}`;
+            // مسار الصور الكامل
+            const imagePath = window.location.origin + repoName + game.img;
             
             container.innerHTML += `
                 <div class="game-item">
                     <div class="game-media">
-                        <img src="${imagePath}" alt="${game.title}" onerror="this.src='${isSubFolder ? '../logo.png' : './logo.png'}'">
+                        <img src="${imagePath}" alt="${game.title}" onerror="this.src='${window.location.origin + repoName}logo.png'">
                     </div>
                     <div class="game-content">
                         <h3>${game.title}</h3>
@@ -43,7 +47,8 @@ async function loadGames() {
                 </div>`;
         });
     } catch (error) {
-        console.error("حدث خطأ في التحميل:", error);
+        console.error("حدث خطأ:", error);
+        document.getElementById('games-container').innerHTML = "<p>عذراً، حدث خطأ أثناء تحميل الألعاب.</p>";
     }
 }
 // 2. وظائف السلة واللوحة الجانبية
