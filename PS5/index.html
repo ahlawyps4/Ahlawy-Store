@@ -14,9 +14,14 @@
             <img src="../logo.png" alt="Logo">
             <div class="brand-text">
                 <strong>AHLAWY STORE</strong>
-                <span>ألعاب بلايستيشن 5 🦅</span>
+                <span>ألعاب PS5 🦅</span>
             </div>
         </div>
+
+        <div class="header-search">
+            <input type="text" id="game-search" placeholder="ابحث عن لعبة... 🔍" onkeyup="filterGames()">
+        </div>
+
         <div class="cart-trigger" onclick="toggleCart()">
             السلة (<span id="cart-count">0</span>)
         </div>
@@ -26,10 +31,6 @@
         <div class="section-title">
             <h2>قائمة ألعاب PS5 المتاحة</h2>
             <p>اختر ألعابك المفضلة وأضفها للسلة للطلب</p>
-        </div>
-
-        <div class="search-wrapper">
-            <input type="text" id="game-search" placeholder="ابحث عن اسم اللعبة هنا... 🔍" onkeyup="filterGames()">
         </div>
 
         <div id="games-container" class="games">
