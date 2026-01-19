@@ -1,4 +1,4 @@
-/* ============ AHLAWY STORE CSS - v3.0 (MODERN HEADER) ============ */
+/* ============ AHLAWY STORE CSS - v3.1 (STABLE & FIXED) ============ */
 :root {
   --main-red: #cc0000;
   --dark-red: #8b0000;
@@ -26,13 +26,13 @@ body {
     backdrop-filter: blur(15px);
     padding: 10px 3%;
     display: flex;
-    justify-content: space-between; /* يوزع العناصر على الأطراف وفي النص */
-    align-items: center; /* يخلي كل العناصر في نص السطر بالظبط */
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 2px solid var(--main-red);
     position: sticky;
     top: 0;
     z-index: 1000;
-    gap: 15px; /* مسافة أمان بين العناصر */
+    gap: 15px;
 }
 
 .brand {
@@ -40,11 +40,11 @@ body {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    flex-shrink: 0; /* يمنع اللوجو إنه يصغر في الشاشات الصغيرة */
+    flex-shrink: 0;
 }
 
 .brand img {
-    width: 50px; /* تصغير الحجم شوية ليناسب الهيدر */
+    width: 50px;
     height: auto;
 }
 
@@ -61,15 +61,15 @@ body {
 
 /* ========== خانة البحث في الهيدر ========== */
 .header-search {
-    flex: 1; /* يخلي البحث يملأ الفراغ المتاح في النص */
-    max-width: 500px; /* ميزيدش عن كدة عشان ميزحمش الدنيا */
+    flex: 1;
+    max-width: 500px;
     display: flex;
 }
 
 #game-search {
     width: 100%;
     padding: 8px 20px;
-    border-radius: 25px; /* شكل انسيابي */
+    border-radius: 25px;
     border: 1px solid #333;
     background: #1a1a1a;
     color: white;
@@ -84,7 +84,7 @@ body {
     box-shadow: 0 0 8px rgba(204, 0, 0, 0.3);
 }
 
-/* ========== السلة ========== */
+/* ========== السلة الزناد (Cart Trigger) ========== */
 .cart-trigger {
     cursor: pointer;
     background: var(--main-red);
@@ -92,11 +92,11 @@ body {
     border-radius: 10px;
     font-weight: bold;
     font-size: 14px;
-    flex-shrink: 0; /* يحافظ على حجمه */
-    white-space: nowrap; /* يمنع النص إنه ينزل سطر جديد */
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
-/* باقي التنسيقات (الكروت والسلة الجانبية) */
+/* باقي التنسيقات (الكروت) */
 .container { padding-top: 20px; }
 
 .games {
@@ -151,7 +151,7 @@ body {
     cursor: not-allowed;
 }
 
-/* ========== السلة الجانبية ========== */
+/* ========== السلة الجانبية (إصلاح الـ QR والزراير) ========== */
 .cart-section {
   position: fixed;
   top: 0;
@@ -178,10 +178,14 @@ body {
     list-style: none;
 }
 
+/* منطقة الأزرار الثابتة في الأسفل */
 .cart-footer {
     border-top: 1px solid #333;
     padding-top: 15px;
     background: #111;
+    display: flex;
+    flex-direction: column; /* جعل الزراير فوق بعض */
+    gap: 12px;
 }
 
 .generate-btn {
@@ -193,6 +197,37 @@ body {
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
+}
+
+/* إصلاح حاوية الـ QR لتكون موسطنة */
+#qr-container {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;    /* توسيط المحتوى أفقياً */
+    justify-content: center; /* توسيط المحتوى رأسياً */
+    margin-top: 5px;
+}
+
+#qrcode img, #qrcode canvas {
+    margin: 0 auto !important;
+    display: block;
+    max-width: 160px;
+    height: auto !important;
+}
+
+.whatsapp-btn {
+    width: 100%;
+    padding: 12px;
+    background: #25d366;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    display: block;
 }
 
 .section-title h2 {
