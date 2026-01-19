@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AHLAWY STORE - ألعاب PS4</title>
     <link rel="stylesheet" href="../style.css">
+    <script src="../qrcode.min.js"></script>
 </head>
 <body data-platform="PS4">
 
@@ -33,21 +34,22 @@
     </main>
 
     <div id="cart-section" class="cart-section">
-    <div class="cart-header">
-        <h2>سلة الطلبات</h2>
-        <button onclick="toggleCart()" class="close-cart">×</button>
-    </div>
-    <ul id="cart-list"></ul>
-    
-    <div class="cart-footer">
-        <button onclick="sendWhatsApp()" class="whatsapp-btn">إرسال الطلب واتساب</button>
+        <div class="cart-header">
+            <h2>سلة الطلبات</h2>
+            <button onclick="toggleCart()" class="close-cart">×</button>
+        </div>
         
-        <div id="qr-container" style="margin-top: 20px; text-align: center; background: white; padding: 10px; border-radius: 10px; display: none;">
-            <div id="qrcode" style="display: flex; justify-content: center;"></div>
-            <p style="color: black; font-size: 12px; margin-top: 5px; font-weight: bold;">امسح الكود لطلب الألعاب 🦅</p>
+        <ul id="cart-list"></ul>
+        
+        <div class="cart-footer">
+            <button onclick="sendWhatsApp()" class="whatsapp-btn">إرسال الطلب واتساب</button>
+            
+            <div id="qr-container" style="margin-top: 15px; text-align: center; background: white; padding: 15px; border-radius: 12px; display: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                <div id="qrcode" style="display: flex; justify-content: center; align-items: center; min-height: 150px;"></div>
+                <p style="color: #000 !important; font-size: 13px; margin-top: 10px; font-weight: bold; font-family: sans-serif;">امسح الكود لطلب الألعاب 🦅</p>
+            </div>
         </div>
     </div>
-</div>
 
     <script src="../script.js"></script>
 </body>
