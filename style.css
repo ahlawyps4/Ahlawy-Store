@@ -287,3 +287,41 @@ body {
     cursor: not-allowed;
     border: 1px solid #555;
 }
+/* تنسيق بار البحث الجديد - ليكون عريضاً وفي المنتصف */
+.search-wrapper {
+    width: 100%;
+    max-width: 800px; /* زيادة العرض */
+    margin: 30px auto; /* توسيط الخانة في نص الصفحة */
+    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#game-search {
+    width: 100%;
+    padding: 15px 25px; /* تكبير الحجم الداخلي */
+    border-radius: 50px; /* جعل الحواف دائرية واحترافية */
+    border: 2px solid #e61e25; /* إضافة إطار بلون أهلاوي */
+    background-color: #1a1a1a;
+    color: white;
+    font-size: 18px; /* تكبير الخط */
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+    transition: all 0.3s ease;
+    text-align: center; /* كتابة البحث في المنتصف */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+#game-search:focus {
+    background-color: #252525;
+    box-shadow: 0 0 20px rgba(230, 30, 37, 0.4);
+    transform: scale(1.02); /* حركة بسيطة عند الضغط للبحث */
+}
+
+/* تنسيق للبحث على الموبايل */
+@media (max-width: 600px) {
+    #game-search {
+        font-size: 16px;
+        padding: 12px 20px;
+    }
+}
