@@ -97,7 +97,7 @@ function generateOrderQR() {
     }
 
     const msg = "طلب جديد من أهلاوي ستور 🦅:\n" + cart.map((t, i) => `${i+1}- ${t}`).join("\n");
-    const whatsappUrl = `https://wa.me/201021424781?text=${encodeURIComponent(msg)}`;
+    const whatsappUrl = `https://wa.me/201018251103?text=${encodeURIComponent(msg)}`;
 
     qrcodeElement.innerHTML = ""; // تنظيف القديم
     qrContainer.style.display = "block"; // إظهار القسم الأبيض
@@ -122,7 +122,7 @@ function sendWhatsAppDirect() {
         window.open(window.currentWhatsappUrl, '_blank');
     } else {
         const msg = "طلب جديد من أهلاوي ستور 🦅:\n" + cart.map((t, i) => `${i+1}- ${t}`).join("\n");
-        window.open(`https://api.whatsapp.com/send?phone=201021424781&text=${encodeURIComponent(msg)}`);
+        window.open(`https://api.whatsapp.com/send?phone=201018251103&text=${encodeURIComponent(msg)}`);
     }
 }
 
