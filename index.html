@@ -16,7 +16,37 @@
 
     <link rel="stylesheet" href="style.css">
     <style>
-        /* تنسيقات سريعة خاصة بالصفحة الرئيسية لجعلها جذابة */
+        /* تنسيق شريط تحميل الكاش المخصص لأهلاوي ستور */
+        #cache-progress-container {
+            display: none; /* سيتم تظهيره بواسطة script.js فقط عند التحميل */
+            background: #111;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid #cc0000;
+            position: sticky;
+            top: 0;
+            z-index: 10000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .progress-track {
+            width: 90%;
+            max-width: 500px;
+            height: 10px;
+            background: #333;
+            border-radius: 20px;
+            margin: 10px auto;
+            overflow: hidden;
+        }
+        #progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #b30000);
+            transition: width 0.4s ease;
+        }
+        #percent-val { font-weight: bold; color: #ff4d4d; }
+
+        /* التنسيقات الأصلية للموقع */
         .home-container {
             display: flex;
             flex-direction: column;
@@ -84,16 +114,22 @@
 </head>
 <body class="home-page">
 
-  <header class="store-header">
-    <div class="brand">
-        <img src="logo.png" alt="Logo">
-        
-        <div class="brand-text">
-            <strong>AHLAWY STORE</strong>
-            <span>متجر الألعاب المعتمد 🦅</span>
+    <div id="cache-progress-container">
+        <div id="status-msg">جاري حفظ المتجر للعمل أوفلاين... <span id="percent-val">0</span>%</div>
+        <div class="progress-track">
+            <div id="progress-bar-fill"></div>
         </div>
     </div>
-</header>
+
+    <header class="store-header">
+        <div class="brand">
+            <img src="logo.png" alt="Logo">
+            <div class="brand-text">
+                <strong>AHLAWY STORE</strong>
+                <span>متجر الألعاب المعتمد 🦅</span>
+            </div>
+        </div>
+    </header>
 
     <main class="home-container">
         <div class="welcome-text">

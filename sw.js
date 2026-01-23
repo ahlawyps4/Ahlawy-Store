@@ -1,48 +1,81 @@
-const CACHE_NAME = 'ahlawy-store-v3'; // رفعنا الإصدار للتحديث
+/* ============ AHLAWY STORE - SERVICE WORKER (PS4 + PROGRESS COUNTER) ============ */
+const CACHE_NAME = 'ahlawy-v5'; // رفعنا الإصدار للتحديث الجديد
 
-// القائمة المحدثة بناءً على ملفاتك
 const assets = [
-  '/',
-  '/index.html',
-  '/admin.html',
-  '/style.css',
-  '/script.js',
-  '/qrcode.min.js',
-  '/games.json',
-  '/logo.png',
-  '/ps4.png',
-  '/ps5.png',
-  '/PS4/index.html',
-  '/PS5/index.html'
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './games.json',
+  './logo.png',
+  './ps4.png',
+  './ps5.png',
+  './qrcode.min.js',
+  './PS4/index.html',
+  './PS5/index.html'
 ];
 
-// مرحلة التثبيت: حفظ الملفات الأساسية
+// 1. مرحلة التثبيت مع إرسال النسبة المئوية
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      console.log('تم حفظ واجهة أهلاوي ستور 🦅');
-      return cache.addAll(assets);
+    caches.open(CACHE_NAME).then(async (cache) => {
+      let downloaded = 0;
+      console.log('بداية الحفظ لمتجر أهلاوي... 🦅');
+
+      for (const url of assets) {
+        try {
+          await cache.add(url);
+          downloaded++;
+          
+          // حساب النسبة المئوية
+          const progress = Math.round((downloaded / assets.length) * 100);
+          
+          // إرسال النسبة لجميع النوافذ المفتوحة (الـ PS4 سيفهمها)
+          const clients = await self.clients.matchAll({ includeUncontrolled: true, type: 'window' });
+          clients.forEach(client => {
+            client.postMessage({ type: 'CACHE_PROGRESS', progress: progress });
+          });
+          
+        } catch (err) {
+          console.error('فشل حفظ ملف معين ولكن سنستمر:', url);
+        }
+      }
     })
   );
+  self.skipWaiting();
 });
 
-// مرحلة الجلب (Fetch): تعديل ذكي لحفظ صور الألعاب أوتوماتيكياً
+// 2. تفعيل الكاش الجديد ومسح القديم
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+      );
+    })
+  );
+  self.clients.claim();
+});
+
+// 3. جلب الملفات (أوفلاين) وحفظ الصور الجديدة
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(response => {
-      // إذا وجدنا الملف في الكاش نعرضه فوراً
       if (response) return response;
 
-      // إذا لم يوجد (مثل صور الألعاب الجديدة)، نحمله من النت ونحفظ نسخة منه فوراً
       return fetch(event.request).then(networkResponse => {
-        // نتأكد أن الطلب لصور الألعاب لكي نحفظه
-        if (event.request.url.includes('/img/')) {
-           return caches.open(CACHE_NAME).then(cache => {
-             cache.put(event.request, networkResponse.clone());
-             return networkResponse;
-           });
+        // إذا كانت صورة جديدة لم تكن في القائمة، احفظها تلقائياً
+        if (event.request.url.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
+          return caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          });
         }
         return networkResponse;
+      }).catch(() => {
+        if (event.request.url.match(/\.(jpg|jpeg|png)$/)) {
+          return caches.match('./logo.png');
+        }
       });
     })
   );

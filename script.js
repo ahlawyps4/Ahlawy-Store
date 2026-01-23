@@ -1,15 +1,47 @@
-/* ============ AHLAWY STORE ENGINE - v3.1 (OFFLINE READY) ============ */
+/* ============ AHLAWY STORE ENGINE - v4.0 (OFFLINE + PROGRESS BAR) ============ */
 
 let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 const STORE_PHONE = "201018251103";
 
-// --- كود تسجيل الـ Service Worker للعمل أوفلاين ---
+// --- كود تسجيل الـ Service Worker مع استقبال نسبة التحميل ---
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
+        // قمنا بتغيير المسار ليكون نسبي لضمان عمله في كل المجلدات
         navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('تم تفعيل نظام الأوفلاين بنجاح 🦅', reg))
+            .then(reg => {
+                console.log('تم تفعيل نظام الأوفلاين 🦅');
+                
+                // الاستماع للرسائل القادمة من sw.js (النسبة المئوية)
+                navigator.serviceWorker.addEventListener('message', event => {
+                    if (event.data.type === 'CACHE_PROGRESS') {
+                        updateProgressBar(event.data.progress);
+                    }
+                });
+            })
             .catch(err => console.log('فشل تفعيل نظام الأوفلاين ❌', err));
     });
+}
+
+// دالة تحديث شريط التحميل في الواجهة
+function updateProgressBar(progress) {
+    const progressBarContainer = document.getElementById('cache-progress-container');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const percentVal = document.getElementById('percent-val');
+    const statusMsg = document.getElementById('status-msg');
+
+    if (progressBarContainer && progressBarFill && percentVal) {
+        progressBarContainer.style.display = 'block'; // إظهار العداد
+        progressBarFill.style.width = progress + '%';
+        percentVal.innerText = progress;
+
+        if (progress === 100) {
+            statusMsg.innerHTML = "✅ تم حفظ المتجر! يمكنك الآن التصفح بدون إنترنت.";
+            // إخفاء العداد بعد ثانيتين من الاكتمال
+            setTimeout(() => {
+                progressBarContainer.style.display = 'none';
+            }, 3000);
+        }
+    }
 }
 
 async function loadGames() {
@@ -59,6 +91,8 @@ async function loadGames() {
         console.error("Fetch Error:", err);
     }
 }
+
+// --- باقي الدوال (addToCart, updateUI, إلخ) تبقى كما هي دون تغيير لضمان استقرار السلة ---
 
 function addToCart(gameTitle) {
     if (!cart.includes(gameTitle)) {
@@ -147,14 +181,13 @@ function toggleCart() {
     if (cartSection) cartSection.classList.toggle('open');
 }
 
-// إغلاق السلة عند الضغط خارجها
 document.addEventListener('click', (event) => {
     const cartSection = document.getElementById('cart-section');
     const cartTrigger = document.querySelector('.cart-trigger');
     
     if (cartSection && cartSection.classList.contains('open')) {
         const isClickInsideCart = cartSection.contains(event.target);
-        const isClickOnTrigger = cartTrigger.contains(event.target);
+        const isClickOnTrigger = (cartTrigger && cartTrigger.contains(event.target));
         const isClickOnAddBtn = event.target.classList.contains('add-to-cart-btn');
         const isClickOnRemoveBtn = event.target.classList.contains('remove-btn');
 
@@ -164,7 +197,6 @@ document.addEventListener('click', (event) => {
     }
 });
 
-// تفعيل البحث عند الكتابة
 document.addEventListener('DOMContentLoaded', () => {
     loadGames();
     updateUI();
@@ -176,7 +208,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function filterGames() {
-    const searchTerm = document.getElementById('game-search').value.toLowerCase();
+    const searchInput = document.getElementById('game-search');
+    if(!searchInput) return;
+    const searchTerm = searchInput.value.toLowerCase();
     const gameItems = document.querySelectorAll('.game-item');
 
     gameItems.forEach(item => {
