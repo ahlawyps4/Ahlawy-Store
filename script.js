@@ -3,25 +3,30 @@
 let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 const STORE_PHONE = "201018251103";
 
-// --- كود تسجيل الـ Service Worker مع استقبال نسبة التحميل ---
+// تسجيل الـ Service Worker بطريقة تناسب GitHub Pages ومتصفح PS4
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        // قمنا بتغيير المسار ليكون نسبي لضمان عمله في كل المجلدات
-        navigator.serviceWorker.register('/sw.js')
+        // تحديد المسار سواء كنت على السيرفر الرئيسي أو GitHub Pages
+        const swUrl = window.location.pathname.includes('Ahlawy-Store') 
+                      ? '/Ahlawy-Store/sw.js' 
+                      : './sw.js';
+
+        navigator.serviceWorker.register(swUrl, { scope: window.location.pathname.includes('Ahlawy-Store') ? '/Ahlawy-Store/' : './' })
             .then(reg => {
-                console.log('تم تفعيل نظام الأوفلاين 🦅');
+                console.log('تم التسجيل بنجاح في النطاق:', reg.scope);
                 
-                // الاستماع للرسائل القادمة من sw.js (النسبة المئوية)
+                // استقبال النسبة المئوية للعداد
                 navigator.serviceWorker.addEventListener('message', event => {
                     if (event.data.type === 'CACHE_PROGRESS') {
                         updateProgressBar(event.data.progress);
                     }
                 });
             })
-            .catch(err => console.log('فشل تفعيل نظام الأوفلاين ❌', err));
+            .catch(err => {
+                console.error('فشل التسجيل: ', err);
+            });
     });
 }
-
 // دالة تحديث شريط التحميل في الواجهة
 function updateProgressBar(progress) {
     const progressBarContainer = document.getElementById('cache-progress-container');
