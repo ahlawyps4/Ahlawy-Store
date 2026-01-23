@@ -4,12 +4,7 @@
         "platform": "PS4",
         "img": "img/PS4/Atomic-Heart-ARABIC.jpg"
     },
-    {
-        "title": "Back 4 Blood (ARABIC)",
-        "platform": "PS4",
-        "img": "img/PS4/Back-4-Blood-ARABIC.jpg"
-    },
-    {
+        {
         "title": "BADLAND Game of the Year",
         "platform": "PS4",
         "img": "img/PS4/BADLAND.jpg"
@@ -28,21 +23,6 @@
         "title": "Bloodborne (وليد الدم)",
         "platform": "PS4",
         "img": "img/PS4/Bloodborne-ARABIC.jpg"
-    },
-    {
-        "title": "Monkeys of Shaolin",
-        "platform": "PS4",
-        "img": "img/PS4/Monkeys-of-Shaolin.jpg"
-    },
-    {
-        "title": "A Plague Tale Innocence",
-        "platform": "PS4",
-        "img": "img/PS4/A-Plague-Tale-Innocence.jpg"
-    },
-    {
-        "title": "Ace Combat 7 Skies Unknown",
-        "platform": "PS4",
-        "img": "img/PS4/Ace-Combat-7-Skies-Unknown.jpg"
     },
     {
         "title": "Amnesia The Bunker",
