@@ -1,9 +1,9 @@
-/* ============ AHLAWY STORE ENGINE - v5.0 (THE FINAL FIX) ============ */
+/* ============ AHLAWY STORE ENGINE - v6.0 (PERFORMANCE OPTIMIZED) ============ */
 
 let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 const STORE_PHONE = "201018251103";
 
-// 1. تسجيل الـ Service Worker (للمتصفحات الحديثة)
+// 1. تسجيل الـ Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         const isGitHub = window.location.hostname.includes('github.io');
@@ -19,7 +19,7 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// 2. دعم الـ AppCache (المخصوص للـ PS4 Jailbreak)
+// 2. دعم الـ AppCache (لـ PS4)
 if (window.applicationCache) {
     window.applicationCache.addEventListener('progress', (e) => {
         if (e.lengthComputable) {
@@ -29,7 +29,6 @@ if (window.applicationCache) {
     }, false);
 }
 
-// 3. دالة تحديث شريط التحميل المشتركة
 function updateProgressBar(progress) {
     const container = document.getElementById('cache-progress-container');
     const fill = document.getElementById('progress-bar-fill');
@@ -47,7 +46,7 @@ function updateProgressBar(progress) {
     }
 }
 
-// 4. تحميل الألعاب (قراءة المسارات الجديدة .jpg)
+// 3. تحميل الألعاب (تم التعديل لمنع التعليق)
 async function loadGames() {
     const isSubFolder = window.location.pathname.includes('/PS4/') || window.location.pathname.includes('/PS5/');
     const jsonPath = isSubFolder ? '../games.json' : './games.json';
@@ -60,16 +59,23 @@ async function loadGames() {
         const platform = document.body.getAttribute('data-platform');
 
         if (!container || !platform) return;
-        container.innerHTML = '';
 
-        games.filter(g => g.platform === platform).forEach(game => {
-            const finalImgUrl = baseAssetPath + game.img; // سيقرأ img/PS4/Name.jpg مباشرة
+        // تصفية الألعاب
+        const filteredGames = games.filter(g => g.platform === platform);
+        
+        // بناء المحتوى في الذاكرة أولاً (Batch Processing)
+        let allGamesHTML = ''; 
+
+        for (let i = 0; i < filteredGames.length; i++) {
+            const game = filteredGames[i];
+            const finalImgUrl = baseAssetPath + game.img;
             const isInCart = cart.includes(game.title);
             
-            container.innerHTML += `
+            // إضافة loading="lazy" لتقليل استهلاك الرام
+            allGamesHTML += `
                 <div class="game-item">
                     <div class="game-media">
-                        <img src="${finalImgUrl}" alt="${game.title}" onerror="this.src='${baseAssetPath}logo.png';">
+                        <img src="${finalImgUrl}" alt="${game.title}" loading="lazy" onerror="this.src='${baseAssetPath}logo.png';">
                     </div>
                     <div class="game-content">
                         <h3>${game.title}</h3>
@@ -79,8 +85,26 @@ async function loadGames() {
                         </button>
                     </div>
                 </div>`;
-        });
-    } catch (err) { console.error("Load Error"); }
+        }
+
+        // حقن كل الألعاب (476 لعبة) في عملية واحدة فقط
+        container.innerHTML = allGamesHTML;
+
+    } catch (err) { 
+        console.error("Load Error", err); 
+    }
+}
+
+// 4. تحسين البحث ليكون خفيفاً على المعالج
+function filterGames() {
+    const searchTerm = document.getElementById('game-search').value.toLowerCase();
+    const items = document.getElementsByClassName('game-item');
+    
+    for (let i = 0; i < items.length; i++) {
+        const title = items[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+        // إخفاء/إظهار بدون إعادة بناء الصفحة
+        items[i].style.display = title.indexOf(searchTerm) > -1 ? "" : "none";
+    }
 }
 
 // --- وظائف السلة (Cart Functions) ---
@@ -104,7 +128,9 @@ function saveAndRefresh() {
 }
 
 function updateButtonsState() {
-    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+    const buttons = document.querySelectorAll('.add-to-cart-btn');
+    buttons.forEach(btn => {
+        // استخراج اسم اللعبة من الـ onclick
         const titleMatch = btn.getAttribute('onclick').match(/'([^']+)'/);
         if (titleMatch && cart.includes(titleMatch[1])) {
             btn.innerText = "تمت الإضافة 🦅";
@@ -126,7 +152,7 @@ function updateUI() {
         list.innerHTML = cart.map((item, i) => `
             <li style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #333; color:white;">
                 <span style="font-size:13px;">${item}</span>
-                <button onclick="removeFromCart(${i})" class="remove-btn" style="color:#ff4d4d; background:none; border:none;">حذف</button>
+                <button onclick="removeFromCart(${i})" class="remove-btn" style="color:#ff4d4d; background:none; border:none; cursor:pointer;">حذف</button>
             </li>
         `).join('');
     }
@@ -137,25 +163,21 @@ function generateOrderQR() {
     const msg = "Order Ahlawy Store:\n" + cart.map((t, i) => `${i+1}-${t}`).join("\n");
     const whatsappUrl = `https://wa.me/${STORE_PHONE}?text=${encodeURIComponent(msg)}`;
     const qrcodeElement = document.getElementById("qrcode");
-    qrcodeElement.innerHTML = ""; 
-    document.getElementById('qr-container').style.display = "block"; 
-    new QRCode(qrcodeElement, { text: whatsappUrl, width: 250, height: 250 });
-    window.currentWhatsappUrl = whatsappUrl;
+    
+    if (qrcodeElement) {
+        qrcodeElement.innerHTML = ""; 
+        document.getElementById('qr-container').style.display = "block"; 
+        new QRCode(qrcodeElement, { text: whatsappUrl, width: 250, height: 250 });
+        window.currentWhatsappUrl = whatsappUrl;
+    }
 }
 
 function sendWhatsAppDirect() { if (window.currentWhatsappUrl) window.open(window.currentWhatsappUrl, '_blank'); }
 function toggleCart() { document.getElementById('cart-section')?.classList.toggle('open'); }
 
+// التشغيل عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', () => {
     loadGames();
     updateUI();
     document.getElementById('game-search')?.addEventListener('input', filterGames);
 });
-
-function filterGames() {
-    const searchTerm = document.getElementById('game-search').value.toLowerCase();
-    document.querySelectorAll('.game-item').forEach(item => {
-        const title = item.querySelector('h3').innerText.toLowerCase();
-        item.style.display = title.includes(searchTerm) ? "block" : "none";
-    });
-}
