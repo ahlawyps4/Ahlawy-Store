@@ -1,9 +1,9 @@
-/* ============ AHLAWY STORE ENGINE - v4.5 (PS4 ULTIMATE COMPATIBLE) ============ */
+/* ============ AHLAWY STORE ENGINE - v5.0 (THE FINAL FIX) ============ */
 
 let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 const STORE_PHONE = "201018251103";
 
-// 1. تسجيل الـ Service Worker مع معالجة نطاق GitHub Pages والـ PS4
+// 1. تسجيل الـ Service Worker (للمتصفحات الحديثة)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         const isGitHub = window.location.hostname.includes('github.io');
@@ -12,19 +12,24 @@ if ('serviceWorker' in navigator) {
 
         navigator.serviceWorker.register(swUrl, { scope: scope })
             .then(reg => {
-                console.log('تم التسجيل بنجاح في النطاق:', reg.scope);
-                
                 navigator.serviceWorker.addEventListener('message', event => {
-                    if (event.data.type === 'CACHE_PROGRESS') {
-                        updateProgressBar(event.data.progress);
-                    }
+                    if (event.data.type === 'CACHE_PROGRESS') updateProgressBar(event.data.progress);
                 });
-            })
-            .catch(err => console.error('فشل تسجيل الكاش:', err));
+            }).catch(err => console.log('SW Error'));
     });
 }
 
-// 2. دالة تحديث شريط التحميل
+// 2. دعم الـ AppCache (المخصوص للـ PS4 Jailbreak)
+if (window.applicationCache) {
+    window.applicationCache.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+            const progress = Math.round((e.loaded / e.total) * 100);
+            updateProgressBar(progress);
+        }
+    }, false);
+}
+
+// 3. دالة تحديث شريط التحميل المشتركة
 function updateProgressBar(progress) {
     const container = document.getElementById('cache-progress-container');
     const fill = document.getElementById('progress-bar-fill');
@@ -35,15 +40,14 @@ function updateProgressBar(progress) {
         container.style.display = 'block';
         fill.style.width = progress + '%';
         percent.innerText = progress;
-
         if (progress === 100) {
-            status.innerHTML = "✅ المتجر جاهز الآن للعمل بدون إنترنت (أوفلاين)";
+            status.innerHTML = "✅ تم حفظ المتجر بنجاح! تصفح الآن بدون إنترنت.";
             setTimeout(() => { container.style.display = 'none'; }, 5000);
         }
     }
 }
 
-// 3. تحميل الألعاب مع معالجة ذكية للصور (حل مشكلة WebP للـ PS4)
+// 4. تحميل الألعاب (قراءة المسارات الجديدة .jpg)
 async function loadGames() {
     const isSubFolder = window.location.pathname.includes('/PS4/') || window.location.pathname.includes('/PS5/');
     const jsonPath = isSubFolder ? '../games.json' : './games.json';
@@ -51,8 +55,6 @@ async function loadGames() {
 
     try {
         const response = await fetch(jsonPath);
-        if (!response.ok) throw new Error("فشل تحميل البيانات");
-        
         const games = await response.json();
         const container = document.getElementById('games-container');
         const platform = document.body.getAttribute('data-platform');
@@ -60,38 +62,28 @@ async function loadGames() {
         if (!container || !platform) return;
         container.innerHTML = '';
 
-        const filtered = games.filter(g => g.platform === platform);
-
-        filtered.forEach(game => {
-            // حل سحري للـ PS4: تحويل امتداد webp إلى jpg تلقائياً في الطلب
-            const imgPath = game.img.replace('.webp', '.jpg');
-            const finalImgUrl = baseAssetPath + imgPath;
+        games.filter(g => g.platform === platform).forEach(game => {
+            const finalImgUrl = baseAssetPath + game.img; // سيقرأ img/PS4/Name.jpg مباشرة
             const isInCart = cart.includes(game.title);
             
             container.innerHTML += `
                 <div class="game-item">
                     <div class="game-media">
-                        <img src="${finalImgUrl}" 
-                             alt="${game.title}" 
-                             onerror="this.onerror=null; this.src='${baseAssetPath}logo.png';">
+                        <img src="${finalImgUrl}" alt="${game.title}" onerror="this.src='${baseAssetPath}logo.png';">
                     </div>
                     <div class="game-content">
                         <h3>${game.title}</h3>
-                        <button 
-                            class="add-to-cart-btn ${isInCart ? 'already-added' : ''}" 
-                            onclick="addToCart('${game.title.replace(/'/g, "\\")}')"
-                            ${isInCart ? 'disabled' : ''}>
+                        <button class="add-to-cart-btn ${isInCart ? 'already-added' : ''}" 
+                                onclick="addToCart('${game.title.replace(/'/g, "\\")}')" ${isInCart ? 'disabled' : ''}>
                             ${isInCart ? 'تمت الإضافة 🦅' : 'إضافة للسلة'}
                         </button>
                     </div>
                 </div>`;
         });
-    } catch (err) {
-        console.error("خطأ في تحميل الألعاب:", err);
-    }
+    } catch (err) { console.error("Load Error"); }
 }
 
-// --- باقي الدوال (Saves, Cart, UI) ---
+// --- وظائف السلة (Cart Functions) ---
 function addToCart(gameTitle) {
     if (!cart.includes(gameTitle)) {
         cart.push(gameTitle);
@@ -112,20 +104,16 @@ function saveAndRefresh() {
 }
 
 function updateButtonsState() {
-    const allButtons = document.querySelectorAll('.add-to-cart-btn');
-    allButtons.forEach(btn => {
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
         const titleMatch = btn.getAttribute('onclick').match(/'([^']+)'/);
-        if (titleMatch) {
-            const gameTitle = titleMatch[1];
-            if (cart.includes(gameTitle)) {
-                btn.innerText = "تمت الإضافة 🦅";
-                btn.classList.add('already-added');
-                btn.disabled = true;
-            } else {
-                btn.innerText = "إضافة للسلة";
-                btn.classList.remove('already-added');
-                btn.disabled = false;
-            }
+        if (titleMatch && cart.includes(titleMatch[1])) {
+            btn.innerText = "تمت الإضافة 🦅";
+            btn.classList.add('already-added');
+            btn.disabled = true;
+        } else {
+            btn.innerText = "إضافة للسلة";
+            btn.classList.remove('already-added');
+            btn.disabled = false;
         }
     });
 }
@@ -133,60 +121,40 @@ function updateButtonsState() {
 function updateUI() {
     const count = document.getElementById('cart-count');
     const list = document.getElementById('cart-list');
-    const qrContainer = document.getElementById('qr-container');
-    
     if (count) count.innerText = cart.length;
-    
     if (list) {
         list.innerHTML = cart.map((item, i) => `
             <li style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #333; color:white;">
-                <span style="font-size:13px; text-align:right;">${item}</span>
+                <span style="font-size:13px;">${item}</span>
                 <button onclick="removeFromCart(${i})" class="remove-btn" style="color:#ff4d4d; background:none; border:none;">حذف</button>
             </li>
         `).join('');
     }
-    if (qrContainer) qrContainer.style.display = "none";
 }
 
 function generateOrderQR() {
-    const qrContainer = document.getElementById('qr-container');
-    const qrcodeElement = document.getElementById("qrcode");
     if (cart.length === 0) return alert("السلة فارغة!");
-    
     const msg = "Order Ahlawy Store:\n" + cart.map((t, i) => `${i+1}-${t}`).join("\n");
     const whatsappUrl = `https://wa.me/${STORE_PHONE}?text=${encodeURIComponent(msg)}`;
-
+    const qrcodeElement = document.getElementById("qrcode");
     qrcodeElement.innerHTML = ""; 
-    qrContainer.style.display = "block"; 
-
-    new QRCode(qrcodeElement, {
-        text: whatsappUrl, width: 250, height: 250,
-        colorDark : "#000000", colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.L
-    });
+    document.getElementById('qr-container').style.display = "block"; 
+    new QRCode(qrcodeElement, { text: whatsappUrl, width: 250, height: 250 });
     window.currentWhatsappUrl = whatsappUrl;
 }
 
-function sendWhatsAppDirect() {
-    if (window.currentWhatsappUrl) window.open(window.currentWhatsappUrl, '_blank');
-}
-
-function toggleCart() {
-    const cartSection = document.getElementById('cart-section');
-    if (cartSection) cartSection.classList.toggle('open');
-}
+function sendWhatsAppDirect() { if (window.currentWhatsappUrl) window.open(window.currentWhatsappUrl, '_blank'); }
+function toggleCart() { document.getElementById('cart-section')?.classList.toggle('open'); }
 
 document.addEventListener('DOMContentLoaded', () => {
     loadGames();
     updateUI();
-    const searchInput = document.getElementById('game-search');
-    if (searchInput) searchInput.addEventListener('input', filterGames);
+    document.getElementById('game-search')?.addEventListener('input', filterGames);
 });
 
 function filterGames() {
     const searchTerm = document.getElementById('game-search').value.toLowerCase();
-    const gameItems = document.querySelectorAll('.game-item');
-    gameItems.forEach(item => {
+    document.querySelectorAll('.game-item').forEach(item => {
         const title = item.querySelector('h3').innerText.toLowerCase();
         item.style.display = title.includes(searchTerm) ? "block" : "none";
     });
