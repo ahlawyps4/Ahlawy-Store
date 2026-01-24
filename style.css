@@ -1,128 +1,55 @@
-/* ============ AHLAWY STORE CSS - v7.0 (EXACT VIDEO MATCH) ============ */
+/* ============ AHLAWY STORE FINAL FIX ============ */
 :root {
   --main-red: #cc0000;
-  --dark-bg: #0a0707;
-  --text-white: #eef2ff;
+  --dark-bg: #000000;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #000; /* خلفية سوداء سادة زي الفيديو */
-  color: var(--text-white);
-  direction: rtl;
+  margin: 0; padding: 0;
+  background: var(--dark-bg);
+  color: #fff; direction: rtl;
+  font-family: sans-serif;
 }
 
-/* شريط التحميل - نحيف ولا يؤثر على التصميم */
-#cache-progress-container {
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(0,0,0,0.8);
-    z-index: 9999;
-    text-align: center;
-    padding: 5px 0;
-}
-
-/* الهيدر - تصغير الارتفاع وتثبيت العناصر */
+/* الهيدر المنضبط */
 .store-header {
-    background: #000;
-    padding: 5px 2%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--main-red);
-    position: sticky;
-    top: 0;
-    z-index: 2000;
-    height: 60px; /* ارتفاع ثابت */
+  background: #000;
+  height: 50px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 10px; border-bottom: 2px solid var(--main-red);
 }
 
-.brand img { width: 40px; height: auto; }
-.brand-text strong { font-size: 14px; color: var(--main-red); }
-
-#game-search {
-    padding: 5px 15px;
-    border-radius: 4px;
-    border: 1px solid #444;
-    background: #111;
-    color: #fff;
-    width: 250px;
-    font-size: 14px;
-}
-
-/* شبكة الـ 8 ألعاب - إصلاح الأبعاد */
+/* أهم جزء: 8 أعمدة إجباري */
 .games {
   display: grid;
-  grid-template-columns: repeat(8, 1fr) !important; /* 8 أعمدة إجباري */
-  gap: 8px; /* تقليل المسافات */
-  padding: 15px;
+  grid-template-columns: repeat(8, 1fr) !important;
+  gap: 5px;
+  padding: 10px;
 }
 
+/* الكارت: تصغير الحجم ليناسب الـ 8 أعمدة */
 .game-item {
-  background: #151515;
+  background: #111;
   border: 1px solid #222;
-  border-radius: 4px;
-  overflow: hidden;
-  transition: 0.2s;
-  height: 280px; /* تحديد ارتفاع الكارت لمنع التطويل الزائد */
-  display: flex;
-  flex-direction: column;
+  height: 220px; /* تقليل الارتفاع */
+  display: flex; flex-direction: column;
+  border-radius: 4px; overflow: hidden;
 }
-
-.game-item:hover { border-color: var(--main-red); }
 
 .game-media img {
   width: 100%;
-  height: 180px; /* تثبيت ارتفاع الصورة */
+  height: 140px; /* تثبيت ارتفاع الصورة */
   object-fit: cover;
 }
 
-.game-content {
-    padding: 5px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 .game-content h3 {
-  font-size: 11px; /* تصغير الخط ليتناسب مع الـ 8 أعمدة */
-  height: 28px;
-  margin: 5px 0;
-  overflow: hidden;
-  line-height: 1.2;
+  font-size: 9px; /* تصغير الخط جداً */
+  height: 22px; margin: 3px 0;
+  overflow: hidden; text-align: center;
 }
 
-/* الأزرار - صغيرة ومنظمة */
 .add-to-cart-btn {
   background: var(--main-red);
-  color: #fff;
-  border: none;
-  padding: 5px;
-  width: 100%;
-  border-radius: 2px;
-  font-size: 11px;
-  font-weight: bold;
-  cursor: pointer;
+  font-size: 9px; padding: 4px 0;
+  border: none; color: #fff; cursor: pointer;
 }
-
-.add-to-cart-btn.already-added { background: #333 !important; }
-
-/* السلة الجانبية */
-.cart-section {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 300px;
-  height: 100%;
-  background: #000;
-  border-right: 2px solid var(--main-red);
-  transition: 0.4s;
-  padding: 20px;
-  z-index: 4000;
-}
-.cart-section.open { left: 0; }
