@@ -1,4 +1,4 @@
-/* ============ AHLAWY STORE FINAL RECOVERY - v8.0 ============ */
+/* ============ AHLAWY STORE FINAL FIX - v9.0 ============ */
 :root {
   --main-red: #ff0000;
   --dark-bg: #0a0707;
@@ -14,82 +14,122 @@ body {
   overflow-x: hidden;
 }
 
-/* ضبط الهيدر واللوجو لمنع تداخل العناصر */
+/* --- تنسيق شريط الكاش (يظهر في أعلى الشاشة تماماً) --- */
+#cache-progress-container {
+    background: #000;
+    color: var(--gold);
+    text-align: center;
+    padding: 5px 0;
+    font-size: 12px;
+    border-bottom: 1px solid var(--main-red);
+    position: relative;
+    z-index: 3000;
+}
+
+.progress-bar-bg {
+    background: #222;
+    height: 4px;
+    width: 100%;
+    margin-top: 4px;
+}
+
+#progress-bar-fill {
+    background: var(--main-red);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s;
+}
+
+/* --- الهيدر (Header) --- */
 .store-header {
     background: rgba(0, 0, 0, 0.95);
-    padding: 5px 2%;
-    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 15px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
     border-bottom: 2px solid var(--main-red);
-    height: 65px; position: sticky; top: 0; z-index: 2000;
+    height: 70px; /* ارتفاع ثابت ومريح */
+    position: sticky; 
+    top: 0; 
+    z-index: 2000;
 }
 
-.brand {
-    display: flex; align-items: center; gap: 12px; cursor: pointer;
-}
+.brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
 
-/* مقاس اللوجو المظبوط */
+/* ضبط اللوجو زي الصورة بالظبط */
 .brand img {
-    width: 48px; height: 48px;
+    width: 55px; 
+    height: 55px;
     object-fit: contain;
-    border: 1px solid var(--main-red);
-    border-radius: 50%; padding: 2px;
+    border: 2px solid var(--main-red);
+    border-radius: 50%;
+    background: #000;
 }
 
-.brand-text strong { font-size: 16px; display: block; color: #fff; }
+.brand-text strong { font-size: 18px; color: #fff; display: block; line-height: 1; }
 .brand-text span { font-size: 11px; color: var(--gold); }
 
 #game-search {
-    padding: 8px 20px; border-radius: 20px; border: 1px solid #444;
-    background: #111; color: #fff; width: 300px; outline: none;
+    padding: 8px 15px; 
+    border-radius: 20px; 
+    border: 1px solid #444;
+    background: #111; 
+    color: #fff; 
+    width: 280px;
 }
 
 .cart-trigger {
-    background: var(--main-red); padding: 8px 18px; border-radius: 5px;
-    font-weight: bold; cursor: pointer; transition: 0.3s;
+    background: var(--main-red); 
+    padding: 8px 15px; 
+    border-radius: 5px;
+    font-weight: bold; 
+    cursor: pointer;
 }
 
-/* شبكة الـ 8 ألعاب - الضبط الذهبي */
+/* --- شبكة الـ 8 ألعاب --- */
 .games {
   display: grid !important;
   grid-template-columns: repeat(8, 1fr) !important;
-  gap: 10px; padding: 20px;
+  gap: 8px; 
+  padding: 15px;
 }
 
 .game-item {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px; overflow: hidden;
-  text-align: center; height: 320px; 
-  display: flex; flex-direction: column;
+  border-radius: 10px; 
+  overflow: hidden;
+  text-align: center; 
+  height: 290px; /* تقليل الارتفاع ليناسب الـ 8 ألعاب */
+  display: flex;
+  flex-direction: column;
 }
 
 .game-media img {
-  width: 100%; height: 190px;
-  object-fit: cover; border-bottom: 1px solid #222;
+  width: 100%; 
+  height: 160px;
+  object-fit: cover;
 }
 
 .game-content { padding: 5px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
 
 .game-content h3 {
-  font-size: 11px; height: 32px; margin: 5px 0;
-  overflow: hidden; line-height: 1.2; font-weight: normal;
+  font-size: 10px; 
+  height: 24px; 
+  margin: 5px 0;
+  overflow: hidden;
 }
 
-/* الأزرار كما في الصورة */
 .add-to-cart-btn {
   background: var(--main-red) !important;
-  color: #fff !important; border: none;
-  padding: 8px; width: 95%; align-self: center;
-  border-radius: 4px; font-size: 11px;
-  font-weight: bold; cursor: pointer; margin-bottom: 8px;
+  color: #fff !important; 
+  border: none;
+  padding: 6px; 
+  width: 90%; 
+  align-self: center;
+  border-radius: 4px; 
+  font-size: 10px;
+  font-weight: bold; 
+  cursor: pointer; 
+  margin-bottom: 5px;
 }
-
-.add-to-cart-btn.already-added { background: #333 !important; color: #888 !important; cursor: not-allowed; }
-
-/* السلة */
-.cart-section {
-  position: fixed; top: 0; left: -100%;
-  width: 320px; height: 100%; background: #000;
-  border-right: 2px solid var(--main-red); transition: 0.4s; z-index: 4000;
-}
-.cart-section.open { left: 0; }
