@@ -1,4 +1,4 @@
-/* ============ AHLAWY STORE FINAL FIX - v10.0 ============ */
+/* ============ AHLAWY STORE FINAL RECOVERY - v10.0 (ULTRA-COMPACT) ============ */
 :root {
   --main-red: #ff0000;
   --dark-bg: #0a0707;
@@ -14,65 +14,64 @@ body {
   overflow-x: hidden;
 }
 
-/* --- تنسيق شريط الكاش --- */
+/* شريط الكاش (يظهر فقط عند الحاجة) */
 #cache-progress-container {
     background: #000; color: var(--gold); text-align: center;
-    padding: 5px 0; font-size: 12px; border-bottom: 1px solid var(--main-red);
-    position: relative; z-index: 3000;
+    padding: 5px 0; font-size: 11px; border-bottom: 1px solid var(--main-red);
 }
-.progress-bar-bg { background: #222; height: 4px; width: 100%; margin-top: 4px; }
+.progress-bar-bg { background: #222; height: 3px; width: 100%; margin-top: 3px; }
 #progress-bar-fill { background: var(--main-red); height: 100%; width: 0%; transition: width 0.3s; }
 
-/* --- الهيدر (Header) --- */
+/* الهيدر (Header) - مضبوط بالمللي */
 .store-header {
-    background: rgba(0, 0, 0, 0.95); padding: 0 15px;
+    background: rgba(0, 0, 0, 0.95); padding: 0 10px;
     display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 2px solid var(--main-red); height: 70px;
+    border-bottom: 2px solid var(--main-red); height: 65px;
     position: sticky; top: 0; z-index: 2000;
 }
-.brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.brand { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .brand img {
-    width: 55px; height: 55px; object-fit: contain;
-    border: 2px solid var(--main-red); border-radius: 50%; background: #000;
+    width: 50px; height: 50px; object-fit: contain;
+    border: 1px solid var(--main-red); border-radius: 50%; background: #000;
 }
-.brand-text strong { font-size: 18px; color: #fff; display: block; line-height: 1; }
-.brand-text span { font-size: 11px; color: var(--gold); }
+.brand-text strong { font-size: 16px; color: #fff; display: block; line-height: 1; }
+.brand-text span { font-size: 10px; color: var(--gold); }
 
 #game-search {
-    padding: 8px 15px; border-radius: 20px; border: 1px solid #444;
-    background: #111; color: #fff; width: 280px;
+    padding: 6px 12px; border-radius: 15px; border: 1px solid #444;
+    background: #111; color: #fff; width: 220px; font-size: 12px;
 }
 .cart-trigger {
-    background: var(--main-red); padding: 8px 15px; border-radius: 5px;
-    font-weight: bold; cursor: pointer;
+    background: var(--main-red); padding: 6px 12px; border-radius: 4px;
+    font-weight: bold; cursor: pointer; font-size: 12px;
 }
 
-/* --- تعديل المسافات لتقليل الفراغات (The Glue Fix) --- */
+/* شبكة الـ 8 أعمدة - (تم لمّ المسافات تماماً) */
 .games {
   display: grid !important;
   grid-template-columns: repeat(8, 1fr) !important;
-  gap: 3px !important; /* تقليل المسافة جداً بين المربعات */
-  padding: 10px !important;
-  max-width: 1400px; /* يمنع تباعد المربعات في الشاشات العريضة */
+  gap: 3px !important; /* المسافة السحرية لجعلهم متلاصقين */
+  padding: 8px !important;
   margin: 0 auto;
+  max-width: 100% !important;
 }
 
 .game-item {
   background: rgba(255, 255, 255, 0.05); 
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px; overflow: hidden; text-align: center;
-  height: 230px !important; /* تقليل الارتفاع لمنع السحب */
+  height: 225px !important; /* ارتفاع ملموم لمنع التمدد */
   display: flex; flex-direction: column;
 }
 
 .game-media img { 
   width: 100% !important; 
-  height: 145px !important; /* الارتفاع المثالي للصورة */
+  height: 145px !important; /* ارتفاع الصورة لضمان ظهور الزرار تحتها */
   object-fit: cover !important; 
 }
 
 .game-content {
-  padding: 2px;
+  padding: 3px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -84,7 +83,9 @@ body {
   height: 20px; 
   margin: 2px 0; 
   overflow: hidden; 
-  line-height: 1.1; 
+  line-height: 1.1;
+  font-weight: normal;
+  color: #ddd;
 }
 
 .add-to-cart-btn {
@@ -95,16 +96,16 @@ body {
 
 .add-to-cart-btn.already-added { background: #333 !important; color: #888 !important; }
 
-/* --- السلة الجانبية --- */
+/* السلة الجانبية */
 .cart-section {
-    position: fixed; top: 0; left: -100%; width: 320px; height: 100%;
+    position: fixed; top: 0; left: -100%; width: 300px; height: 100%;
     background: #000; border-right: 2px solid var(--main-red);
-    transition: 0.4s; z-index: 4000; padding: 20px; color: white;
+    transition: 0.4s; z-index: 4000; padding: 15px; color: white;
 }
 .cart-section.open { left: 0; }
 .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; }
-#cart-list { list-style: none; padding: 0; margin-top: 20px; max-height: 70vh; overflow-y: auto; }
-.cart-footer { margin-top: 20px; }
-.generate-btn { background: var(--gold); color: #000; border: none; width: 100%; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; }
-#qr-container { background: white; margin-top: 15px; padding: 10px; display: none; border-radius: 8px; }
-.whatsapp-btn { background: #25d366; color: white; border: none; width: 100%; padding: 10px; margin-top: 10px; font-weight: bold; border-radius: 5px; }
+#cart-list { list-style: none; padding: 0; margin-top: 15px; max-height: 70vh; overflow-y: auto; }
+.cart-footer { margin-top: 15px; }
+.generate-btn { background: var(--gold); color: #000; border: none; width: 100%; padding: 10px; font-weight: bold; cursor: pointer; border-radius: 5px; }
+#qr-container { background: white; margin-top: 10px; padding: 8px; display: none; border-radius: 5px; text-align: center; }
+.whatsapp-btn { background: #25d366; color: white; border: none; width: 100%; padding: 10px; margin-top: 8px; font-weight: bold; border-radius: 5px; }
