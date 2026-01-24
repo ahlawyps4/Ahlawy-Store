@@ -1,4 +1,4 @@
-/* ============ AHLAWY STORE FINAL RECOVERY - v13.0 ============ */
+/* ============ AHLAWY STORE FINAL RECOVERY - v14.0 (Performance Optimized) ============ */
 :root {
   --main-red: #ff0000;
   --dark-bg: #0a0707;
@@ -13,16 +13,8 @@ body {
   font-family: sans-serif;
   overflow-x: hidden;
 }
-.brand img {
-    width: 45px !important;  /* تصغير العرض من 55 لـ 45 */
-    height: 45px !important; /* تصغير الطول من 55 لـ 45 */
-    object-fit: contain;
-    border: 1.5px solid var(--main-red); /* تقليل سمك البرواز شوية */
-    border-radius: 50%;
-    background: #000;
-}
 
-/* --- تحسين الهيدر --- */
+/* --- الهيدر --- */
 .store-header {
     background: rgba(0, 0, 0, 0.95); 
     padding: 0 15px;
@@ -36,6 +28,15 @@ body {
     z-index: 2000;
 }
 
+.brand img {
+    width: 45px !important; 
+    height: 45px !important;
+    object-fit: contain;
+    border: 1.5px solid var(--main-red);
+    border-radius: 50%;
+    background: #000;
+}
+
 .header-search input {
     width: 250px;
     padding: 8px;
@@ -46,136 +47,94 @@ body {
     font-size: 14px;
 }
 
-.cart-trigger {
-    background-color: var(--main-red);
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-}
-
-/* --- تحسين عرض الألعاب --- */
+/* --- عرض الألعاب (Grid) --- */
 .games {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    /* 5 أعمدة للشاشات الكبيرة (مثل التلفزيون) */
+    grid-template-columns: repeat(5, 1fr); 
     gap: 15px;
     padding: 20px;
 }
 
-@media (max-width: 900px) {
-    .games {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
+@media (max-width: 1280px) { .games { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 900px) { .games { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px) { .games { grid-template-columns: repeat(2, 1fr); } }
 
-@media (max-width: 600px) {
-    .games {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* --- تحسين عرض كل لعبة --- */
+/* --- كارت اللعبة (Game Item) --- */
 .game-item {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     overflow: hidden;
     text-align: center;
-    height: 250px;
+    /* منع الكارت من التمدد بشكل مفرط بسبب الصور الكبيرة */
+    height: auto; 
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease;
+    transition: transform 0.2s;
 }
 
 .game-item:hover {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
+    border-color: var(--main-red);
+}
+
+/* التعديل الأهم: التحكم في ميديا الصور */
+.game-media {
+    width: 100%;
+    height: 180px; /* طول موحد للصور */
+    overflow: hidden;
+    background: #000;
 }
 
 .game-media img {
     width: 100%;
-    height: 150px;
-    object-fit: cover;
+    height: 100%;
+    object-fit: cover; /* لضمان ملء المساحة بدون تشويه */
+    /* تحسين الأداء: يمنع المتصفح من معالجة أجزاء الصورة الخارجة عن الإطار */
+    image-rendering: -webkit-optimize-contrast; 
 }
 
 .game-content {
     padding: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 
 .game-content h3 {
-    font-size: 14px;
-    color: white;
+    font-size: 13px;
+    height: 32px; /* توحيد طول العناوين */
+    overflow: hidden;
+    margin: 5px 0;
 }
 
+/* --- الأزرار --- */
 .add-to-cart-btn {
     background-color: var(--main-red);
     color: white;
-    padding: 10px;
+    padding: 8px;
     border: none;
+    width: 100%;
     cursor: pointer;
     font-weight: bold;
     border-radius: 5px;
-    margin-top: 10px;
 }
 
-.add-to-cart-btn:hover {
-    background-color: #b30000;
-}
-
-/* --- تحسين سلة المشتريات --- */
+/* --- السلة --- */
 .cart-section {
-    position: fixed; 
-    top: 0; 
-    left: -100%; 
-    width: 320px; 
-    height: 100%;
-    background-color: #111;
-    border-right: 2px solid var(--main-red);
-    transition: 0.4s;
-    z-index: 4000;
-    padding: 20px;
-    color: white;
+    position: fixed; top: 0; left: -100%; width: 320px; height: 100%;
+    background-color: #0c0c0c; border-right: 2px solid var(--main-red);
+    transition: 0.4s; z-index: 4000; padding: 20px;
 }
 
-.cart-section.open {
-    left: 0;
-}
+.cart-section.open { left: 0; }
 
-.cart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #333;
-    padding-bottom: 10px;
-}
-
-.generate-btn {
-    background: var(--gold);
-    color: #000;
-    width: 100%;
-    padding: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.whatsapp-btn {
-    background: #25d366;
-    color: white;
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    font-weight: bold;
-    border-radius: 5px;
-}
-
-/* شريط الكاش (لو احتاجته في الرئيسية) */
+/* شريط الكاش العلوي - ثابت ونحيف لمتصفح PS4 */
 #cache-progress-container {
     background: #000; color: var(--gold); text-align: center;
-    padding: 5px 0; font-size: 12px; border-bottom: 1px solid var(--main-red);
+    padding: 10px 0; font-size: 14px; 
+    border-bottom: 2px solid var(--main-red);
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;
+    display: none; /* يتم إظهاره بالـ JS */
 }
-.progress-bar-bg { background: #222; height: 4px; width: 100%; margin-top: 4px; }
-#progress-bar-fill { background: var(--main-red); height: 100%; width: 0%; transition: width 0.3s; }
+
+.progress-bar-bg { background: #222; height: 6px; width: 80%; margin: 8px auto; border-radius: 10px; overflow: hidden; }
+#progress-bar-fill { background: linear-gradient(90deg, #ff0000, #b30000); height: 100%; width: 0%; transition: width 0.3s; }
