@@ -13,6 +13,14 @@ body {
   font-family: sans-serif;
   overflow-x: hidden;
 }
+.brand img {
+    width: 45px !important;  /* تصغير العرض من 55 لـ 45 */
+    height: 45px !important; /* تصغير الطول من 55 لـ 45 */
+    object-fit: contain;
+    border: 1.5px solid var(--main-red); /* تقليل سمك البرواز شوية */
+    border-radius: 50%;
+    background: #000;
+}
 
 /* --- تحسين الهيدر --- */
 .store-header {
