@@ -1,55 +1,237 @@
-/* ============ AHLAWY STORE FINAL FIX ============ */
+/* ============ AHLAWY STORE CSS - v3.1 (STABLE & FIXED) ============ */
 :root {
-  --main-red: #cc0000;
-  --dark-bg: #000000;
+  --main-red: #cc0000;
+  --dark-red: #8b0000;
+  --gold: #d4af37;
+  --dark-bg: #0a0707;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --glass: rgba(255, 255, 255, 0.1);
+  --text-white: #eef2ff;
 }
 
 body {
-  margin: 0; padding: 0;
-  background: var(--dark-bg);
-  color: #fff; direction: rtl;
-  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: radial-gradient(circle at top, #2a0b0b 0%, var(--dark-bg) 70%);
+  color: var(--text-white);
+  direction: rtl;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* الهيدر المنضبط */
+/* ========== الهيدر المطور (Header) ========== */
 .store-header {
-  background: #000;
-  height: 50px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 10px; border-bottom: 2px solid var(--main-red);
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(15px);
+    padding: 10px 3%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--main-red);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    gap: 15px;
 }
 
-/* أهم جزء: 8 أعمدة إجباري */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.brand img {
+    width: 50px;
+    height: auto;
+}
+
+.brand-text strong {
+    font-size: 1.1rem;
+    color: var(--main-red);
+    display: block;
+}
+
+.brand-text span {
+    font-size: 0.7rem;
+    color: var(--gold);
+}
+
+/* ========== خانة البحث في الهيدر ========== */
+.header-search {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+}
+
+#game-search {
+    width: 100%;
+    padding: 8px 20px;
+    border-radius: 25px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s ease;
+    text-align: right;
+}
+
+#game-search:focus {
+    border-color: var(--main-red);
+    box-shadow: 0 0 8px rgba(204, 0, 0, 0.3);
+}
+
+/* ========== السلة الزناد (Cart Trigger) ========== */
+.cart-trigger {
+    cursor: pointer;
+    background: var(--main-red);
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* باقي التنسيقات (الكروت) */
+.container { padding-top: 20px; }
+
 .games {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr) !important;
-  gap: 5px;
-  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 
-/* الكارت: تصغير الحجم ليناسب الـ 8 أعمدة */
 .game-item {
-  background: #111;
-  border: 1px solid #222;
-  height: 220px; /* تقليل الارتفاع */
-  display: flex; flex-direction: column;
-  border-radius: 4px; overflow: hidden;
+  background: var(--card-bg);
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid var(--glass);
+  transition: transform 0.3s;
+  text-align: center;
+}
+
+.game-item:hover {
+  transform: scale(1.05);
+  border-color: var(--main-red);
 }
 
 .game-media img {
-  width: 100%;
-  height: 140px; /* تثبيت ارتفاع الصورة */
-  object-fit: cover;
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
 }
 
 .game-content h3 {
-  font-size: 9px; /* تصغير الخط جداً */
-  height: 22px; margin: 3px 0;
-  overflow: hidden; text-align: center;
+  font-size: 0.9rem;
+  margin: 10px 5px;
+  height: 40px;
+  overflow: hidden;
 }
 
 .add-to-cart-btn {
-  background: var(--main-red);
-  font-size: 9px; padding: 4px 0;
-  border: none; color: #fff; cursor: pointer;
+  background: var(--main-red);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  width: 90%;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.add-to-cart-btn.already-added {
+    background-color: #444 !important;
+    color: #888 !important;
+    cursor: not-allowed;
+}
+
+/* ========== السلة الجانبية (إصلاح الـ QR والزراير) ========== */
+.cart-section {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 320px;
+  height: 100%;
+  background: #111;
+  box-shadow: 5px 0 20px rgba(0,0,0,0.8);
+  z-index: 2000;
+  transition: 0.4s;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-section.open { left: 0; }
+
+#cart-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin: 15px 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* منطقة الأزرار الثابتة في الأسفل */
+.cart-footer {
+    border-top: 1px solid #333;
+    padding-top: 15px;
+    background: #111;
+    display: flex;
+    flex-direction: column; /* جعل الزراير فوق بعض */
+    gap: 12px;
+}
+
+.generate-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--main-red);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* إصلاح حاوية الـ QR لتكون موسطنة */
+#qr-container {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;    /* توسيط المحتوى أفقياً */
+    justify-content: center; /* توسيط المحتوى رأسياً */
+    margin-top: 5px;
+}
+
+#qrcode img, #qrcode canvas {
+    margin: 0 auto !important;
+    display: block;
+    max-width: 160px;
+    height: auto !important;
+}
+
+.whatsapp-btn {
+    width: 100%;
+    padding: 12px;
+    background: #25d366;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    display: block;
+}
+
+.section-title h2 {
+    color: var(--gold);
+    font-size: 1.5rem;
+    text-align: center;
 }
