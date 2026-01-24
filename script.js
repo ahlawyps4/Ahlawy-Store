@@ -1,9 +1,9 @@
-/* ============ AHLAWY STORE ENGINE - v6.0 (PERFORMANCE OPTIMIZED) ============ */
+/* ============ AHLAWY STORE ENGINE - v6.1 (ULTIMATE PERFORMANCE) ============ */
 
 let cart = JSON.parse(localStorage.getItem('ahlawy_cart')) || [];
 const STORE_PHONE = "201018251103";
 
-// 1. تسجيل الـ Service Worker
+// 1. تسجيل الـ Service Worker (للتصفح بدون إنترنت)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         const isGitHub = window.location.hostname.includes('github.io');
@@ -19,16 +19,7 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// 2. دعم الـ AppCache (لـ PS4)
-if (window.applicationCache) {
-    window.applicationCache.addEventListener('progress', (e) => {
-        if (e.lengthComputable) {
-            const progress = Math.round((e.loaded / e.total) * 100);
-            updateProgressBar(progress);
-        }
-    }, false);
-}
-
+// 2. تحديث شريط التحميل (Progress Bar)
 function updateProgressBar(progress) {
     const container = document.getElementById('cache-progress-container');
     const fill = document.getElementById('progress-bar-fill');
@@ -46,7 +37,7 @@ function updateProgressBar(progress) {
     }
 }
 
-// 3. تحميل الألعاب (تم التعديل لمنع التعليق)
+// 3. تحميل الألعاب (Batch Processing Optimized)
 async function loadGames() {
     const isSubFolder = window.location.pathname.includes('/PS4/') || window.location.pathname.includes('/PS5/');
     const jsonPath = isSubFolder ? '../games.json' : './games.json';
@@ -60,10 +51,7 @@ async function loadGames() {
 
         if (!container || !platform) return;
 
-        // تصفية الألعاب
         const filteredGames = games.filter(g => g.platform === platform);
-        
-        // بناء المحتوى في الذاكرة أولاً (Batch Processing)
         let allGamesHTML = ''; 
 
         for (let i = 0; i < filteredGames.length; i++) {
@@ -71,7 +59,7 @@ async function loadGames() {
             const finalImgUrl = baseAssetPath + game.img;
             const isInCart = cart.includes(game.title);
             
-            // إضافة loading="lazy" لتقليل استهلاك الرام
+            // إضافة خاصية data-title لسهولة الوصول إليها برمجياً
             allGamesHTML += `
                 <div class="game-item">
                     <div class="game-media">
@@ -80,34 +68,32 @@ async function loadGames() {
                     <div class="game-content">
                         <h3>${game.title}</h3>
                         <button class="add-to-cart-btn ${isInCart ? 'already-added' : ''}" 
-                                onclick="addToCart('${game.title.replace(/'/g, "\\")}')" ${isInCart ? 'disabled' : ''}>
+                                data-game-title="${game.title.replace(/'/g, "&apos;")}"
+                                onclick="addToCart('${game.title.replace(/'/g, "\\'")}')" ${isInCart ? 'disabled' : ''}>
                             ${isInCart ? 'تمت الإضافة 🦅' : 'إضافة للسلة'}
                         </button>
                     </div>
                 </div>`;
         }
 
-        // حقن كل الألعاب (476 لعبة) في عملية واحدة فقط
         container.innerHTML = allGamesHTML;
-
     } catch (err) { 
         console.error("Load Error", err); 
     }
 }
 
-// 4. تحسين البحث ليكون خفيفاً على المعالج
+// 4. نظام البحث السريع
 function filterGames() {
     const searchTerm = document.getElementById('game-search').value.toLowerCase();
     const items = document.getElementsByClassName('game-item');
     
     for (let i = 0; i < items.length; i++) {
         const title = items[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
-        // إخفاء/إظهار بدون إعادة بناء الصفحة
         items[i].style.display = title.indexOf(searchTerm) > -1 ? "" : "none";
     }
 }
 
-// --- وظائف السلة (Cart Functions) ---
+// 5. وظائف السلة المحدثة
 function addToCart(gameTitle) {
     if (!cart.includes(gameTitle)) {
         cart.push(gameTitle);
@@ -127,12 +113,14 @@ function saveAndRefresh() {
     updateUI();
 }
 
+// 6. التعديل الجديد لضمان مطابقة الأزرار بدقة
 function updateButtonsState() {
     const buttons = document.querySelectorAll('.add-to-cart-btn');
     buttons.forEach(btn => {
-        // استخراج اسم اللعبة من الـ onclick
         const titleMatch = btn.getAttribute('onclick').match(/'([^']+)'/);
-        if (titleMatch && cart.includes(titleMatch[1])) {
+        const gameTitle = titleMatch ? titleMatch[1].replace(/\\'/g, "'") : "";
+
+        if (cart.includes(gameTitle)) {
             btn.innerText = "تمت الإضافة 🦅";
             btn.classList.add('already-added');
             btn.disabled = true;
@@ -158,6 +146,7 @@ function updateUI() {
     }
 }
 
+// 7. نظام الطلبات والـ QR
 function generateOrderQR() {
     if (cart.length === 0) return alert("السلة فارغة!");
     const msg = "Order Ahlawy Store:\n" + cart.map((t, i) => `${i+1}-${t}`).join("\n");
@@ -175,7 +164,7 @@ function generateOrderQR() {
 function sendWhatsAppDirect() { if (window.currentWhatsappUrl) window.open(window.currentWhatsappUrl, '_blank'); }
 function toggleCart() { document.getElementById('cart-section')?.classList.toggle('open'); }
 
-// التشغيل عند تحميل الصفحة
+// التشغيل
 document.addEventListener('DOMContentLoaded', () => {
     loadGames();
     updateUI();
