@@ -179,5 +179,15 @@ function toggleCart() { document.getElementById('cart-section')?.classList.toggl
 document.addEventListener('DOMContentLoaded', () => {
     loadGames();
     updateUI();
-    document.getElementById('game-search')?.addEventListener('input', filterGames);
+    document.getElementById("game-search").addEventListener("input", function() {
+    let searchQuery = this.value.toLowerCase();
+    let games = document.querySelectorAll(".game-item");
+    games.forEach(function(game) {
+        let gameTitle = game.querySelector("h3").textContent.toLowerCase();
+        if (gameTitle.includes(searchQuery)) {
+            game.style.display = "block"; // إظهار اللعبة
+        } else {
+            game.style.display = "none"; // إخفاء اللعبة
+        }
+    });
 });
