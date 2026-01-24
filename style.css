@@ -100,7 +100,7 @@ body {
   border-radius: 10px; 
   overflow: hidden;
   text-align: center; 
-  height: 90px; /* تقليل الارتفاع ليناسب الـ 8 ألعاب */
+  height: 190px; /* تقليل الارتفاع ليناسب الـ 8 ألعاب */
   display: flex;
   flex-direction: column;
 }
