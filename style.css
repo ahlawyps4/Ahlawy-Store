@@ -1,46 +1,36 @@
-/* ============ AHLAWY STORE CSS - v6.0 (CLASSIC REBORN) ============ */
+/* ============ AHLAWY STORE CSS - v7.0 (EXACT VIDEO MATCH) ============ */
 :root {
   --main-red: #cc0000;
-  --dark-red: #8b0000;
-  --gold: #d4af37;
   --dark-bg: #0a0707;
-  --card-bg: rgba(255, 255, 255, 0.05);
-  --glass: rgba(255, 255, 255, 0.1);
   --text-white: #eef2ff;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: radial-gradient(circle at top, #4b0000 0%, var(--dark-bg) 80%);
+  font-family: 'Segoe UI', sans-serif;
+  background: #000; /* خلفية سوداء سادة زي الفيديو */
   color: var(--text-white);
   direction: rtl;
 }
 
-/* شريط التحميل الأهلاوي */
+/* شريط التحميل - نحيف ولا يؤثر على التصميم */
 #cache-progress-container {
     display: none; 
     position: fixed;
-    top: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 350px;
-    background: rgba(0, 0, 0, 0.9);
-    padding: 10px;
-    border-radius: 5px;
-    border-bottom: 3px solid var(--main-red);
-    z-index: 5000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 9999;
     text-align: center;
+    padding: 5px 0;
 }
 
-.progress-bar-bg { width: 100%; height: 6px; background: #222; margin-top: 5px; }
-#progress-bar-fill { width: 0%; height: 100%; background: var(--main-red); transition: width 0.3s; }
-
-/* الهيدر */
+/* الهيدر - تصغير الارتفاع وتثبيت العناصر */
 .store-header {
     background: #000;
-    padding: 10px 2%;
+    padding: 5px 2%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -48,79 +38,88 @@ body {
     position: sticky;
     top: 0;
     z-index: 2000;
+    height: 60px; /* ارتفاع ثابت */
 }
 
 .brand img { width: 40px; height: auto; }
+.brand-text strong { font-size: 14px; color: var(--main-red); }
+
 #game-search {
-    padding: 8px 15px;
+    padding: 5px 15px;
     border-radius: 4px;
     border: 1px solid #444;
     background: #111;
     color: #fff;
-    width: 300px;
+    width: 250px;
+    font-size: 14px;
 }
 
-/* شبكة الـ 8 ألعاب (كما في الفيديو) */
+/* شبكة الـ 8 ألعاب - إصلاح الأبعاد */
 .games {
   display: grid;
-  grid-template-columns: repeat(8, 1fr); /* 8 ألعاب بالضبط */
-  gap: 12px;
-  padding: 20px;
+  grid-template-columns: repeat(8, 1fr) !important; /* 8 أعمدة إجباري */
+  gap: 8px; /* تقليل المسافات */
+  padding: 15px;
 }
 
 .game-item {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 8px;
+  background: #151515;
+  border: 1px solid #222;
+  border-radius: 4px;
   overflow: hidden;
   transition: 0.2s;
+  height: 280px; /* تحديد ارتفاع الكارت لمنع التطويل الزائد */
+  display: flex;
+  flex-direction: column;
 }
 
-.game-item:hover { border-color: var(--main-red); transform: scale(1.03); }
+.game-item:hover { border-color: var(--main-red); }
 
 .game-media img {
   width: 100%;
-  aspect-ratio: 10/14; /* أبعاد غلاف الألعاب الحقيقية */
+  height: 180px; /* تثبيت ارتفاع الصورة */
   object-fit: cover;
 }
 
-.game-content { padding: 8px 4px; text-align: center; }
+.game-content {
+    padding: 5px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
 .game-content h3 {
-  font-size: 0.75rem;
-  height: 32px;
+  font-size: 11px; /* تصغير الخط ليتناسب مع الـ 8 أعمدة */
+  height: 28px;
   margin: 5px 0;
   overflow: hidden;
   line-height: 1.2;
 }
 
-/* الأزرار باللون الأحمر الصريح كما في الفيديو */
+/* الأزرار - صغيرة ومنظمة */
 .add-to-cart-btn {
   background: var(--main-red);
   color: #fff;
   border: none;
-  padding: 6px;
-  width: 90%;
-  border-radius: 4px;
-  font-size: 0.7rem;
+  padding: 5px;
+  width: 100%;
+  border-radius: 2px;
+  font-size: 11px;
   font-weight: bold;
   cursor: pointer;
-  margin-bottom: 5px;
 }
 
-.add-to-cart-btn.already-added {
-    background: #444 !important;
-    color: #888 !important;
-}
+.add-to-cart-btn.already-added { background: #333 !important; }
 
-/* السلة */
+/* السلة الجانبية */
 .cart-section {
   position: fixed;
   top: 0;
   left: -100%;
-  width: 320px;
+  width: 300px;
   height: 100%;
-  background: #0a0a0a;
+  background: #000;
   border-right: 2px solid var(--main-red);
   transition: 0.4s;
   padding: 20px;
