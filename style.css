@@ -1,4 +1,4 @@
-/* ============ AHLAWY STORE FINAL RECOVERY - v14.0 (Performance Optimized) ============ */
+/* ============ AHLAWY STORE FINAL RECOVERY - v15.0 ============ */
 :root {
   --main-red: #ff0000;
   --dark-bg: #0a0707;
@@ -14,7 +14,7 @@ body {
   overflow-x: hidden;
 }
 
-/* --- الهيدر --- */
+/* --- الهيدر (Header) --- */
 .store-header {
     background: rgba(0, 0, 0, 0.95); 
     padding: 0 15px;
@@ -28,6 +28,7 @@ body {
     z-index: 2000;
 }
 
+.brand { display: flex; align-items: center; gap: 10px; }
 .brand img {
     width: 45px !important; 
     height: 45px !important;
@@ -44,97 +45,107 @@ body {
     border: 1px solid #444;
     background-color: #111;
     color: white;
+}
+
+/* --- تنسيق الصفحة الرئيسية (اختيار المنصة) --- */
+.home-container {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.welcome-text h1 { color: var(--gold); font-size: 2.5rem; margin-bottom: 10px; }
+
+.platform-selection {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+/* تعديل الكروت الضخمة في الرئيسية */
+.platform-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #333;
+    border-radius: 20px;
+    width: 300px; /* تحديد عرض ثابت للكارت */
+    padding: 25px;
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+}
+
+.platform-card:hover { border-color: var(--main-red); transform: translateY(-10px); }
+
+.platform-card img {
+    width: 120px !important; /* تصغير الصور الضخمة في الرئيسية */
+    height: auto;
+    margin-bottom: 15px;
+}
+
+/* تصغير الأزرار الضخمة */
+.btn-enter {
+    background: var(--main-red);
+    padding: 10px 25px;
+    border-radius: 50px;
+    display: inline-block;
+    margin-top: 15px;
+    font-weight: bold;
     font-size: 14px;
 }
 
-/* --- عرض الألعاب (Grid) --- */
+/* --- شبكة الألعاب (الأقسام الداخلية) --- */
 .games {
     display: grid;
-    /* 5 أعمدة للشاشات الكبيرة (مثل التلفزيون) */
     grid-template-columns: repeat(5, 1fr); 
     gap: 15px;
     padding: 20px;
 }
 
-@media (max-width: 1280px) { .games { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 1200px) { .games { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 900px) { .games { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 600px) { .games { grid-template-columns: repeat(2, 1fr); } }
 
-/* --- كارت اللعبة (Game Item) --- */
 .game-item {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     overflow: hidden;
     text-align: center;
-    /* منع الكارت من التمدد بشكل مفرط بسبب الصور الكبيرة */
-    height: auto; 
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s;
 }
 
-.game-item:hover {
-    transform: translateY(-5px);
-    border-color: var(--main-red);
-}
+.game-media { width: 100%; height: 180px; background: #000; overflow: hidden; }
+.game-media img { width: 100%; height: 100%; object-fit: cover; }
 
-/* التعديل الأهم: التحكم في ميديا الصور */
-.game-media {
-    width: 100%;
-    height: 180px; /* طول موحد للصور */
-    overflow: hidden;
-    background: #000;
-}
+.game-content { padding: 10px; }
+.game-content h3 { font-size: 13px; height: 32px; overflow: hidden; }
 
-.game-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* لضمان ملء المساحة بدون تشويه */
-    /* تحسين الأداء: يمنع المتصفح من معالجة أجزاء الصورة الخارجة عن الإطار */
-    image-rendering: -webkit-optimize-contrast; 
-}
-
-.game-content {
-    padding: 10px;
-}
-
-.game-content h3 {
-    font-size: 13px;
-    height: 32px; /* توحيد طول العناوين */
-    overflow: hidden;
-    margin: 5px 0;
-}
-
-/* --- الأزرار --- */
 .add-to-cart-btn {
     background-color: var(--main-red);
     color: white;
     padding: 8px;
     border: none;
-    width: 100%;
     cursor: pointer;
-    font-weight: bold;
     border-radius: 5px;
+    width: 100%;
+    font-weight: bold;
 }
 
-/* --- السلة --- */
+/* --- السلة وشريط الكاش --- */
 .cart-section {
     position: fixed; top: 0; left: -100%; width: 320px; height: 100%;
     background-color: #0c0c0c; border-right: 2px solid var(--main-red);
     transition: 0.4s; z-index: 4000; padding: 20px;
 }
-
 .cart-section.open { left: 0; }
 
-/* شريط الكاش العلوي - ثابت ونحيف لمتصفح PS4 */
 #cache-progress-container {
     background: #000; color: var(--gold); text-align: center;
-    padding: 10px 0; font-size: 14px; 
-    border-bottom: 2px solid var(--main-red);
+    padding: 10px 0; border-bottom: 2px solid var(--main-red);
     position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;
-    display: none; /* يتم إظهاره بالـ JS */
+    display: none;
 }
-
 .progress-bar-bg { background: #222; height: 6px; width: 80%; margin: 8px auto; border-radius: 10px; overflow: hidden; }
 #progress-bar-fill { background: linear-gradient(90deg, #ff0000, #b30000); height: 100%; width: 0%; transition: width 0.3s; }
